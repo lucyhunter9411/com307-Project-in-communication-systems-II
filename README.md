@@ -1,3 +1,5 @@
-# Pursuit
+# Ad-hoc teamwork in the pursuit domain
 
-## Ad-hoc teamwork in the pursuit domain
+## Supervisor: Panayiotis Danassis
+
+## Spring semester 2017
