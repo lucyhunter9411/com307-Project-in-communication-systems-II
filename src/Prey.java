@@ -16,30 +16,10 @@ public class Prey implements Agent {
 		return posX;
 	}
 
-	public void iterate(State currentState, RandomSeededDouble r) {
-		int width = currentState.getMapWidth();
-		int height = currentState.getMapHeight();
-		int i = currentState.getPos(posX, posY);
-		currentState.setPos(posX,posY,0);
-		int newPosX = posX;
-		int newPosY = posY;
-		switch(findNextMove(r))
-		{
-		case 1: newPosX = posX-1+width; break;
-		case 2: newPosY = posY-1+height; break;
-		case 3: newPosX = posX+1; break;
-		case 4: newPosY = posY+1; break;
-		default: break;
-		}
-		newPosX = newPosX % width;
-		newPosY = newPosY % height;
-		//check if the new spot is free
-		if(currentState.getPos(newPosX, newPosY)==0){
-			posX = newPosX;
-			posY = newPosY;
-		}
-		currentState.setPos(posX, posY, i);
+	public int iterate(State currentState, RandomSeededDouble r) {
+		return findNextMove(r);
 	}
+	
 	//1 go top
 	//2 go left
 	//3 go bottom
@@ -58,5 +38,10 @@ public class Prey implements Agent {
 		else{
 			return 4;
 		}
+	}
+	
+	public void setPos(int newPosX, int newPosY) {
+		posX = newPosX;
+		posY = newPosY;	
 	}
 }

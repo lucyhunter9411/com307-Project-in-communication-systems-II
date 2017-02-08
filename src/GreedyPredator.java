@@ -15,28 +15,8 @@ public class GreedyPredator implements Agent{
 		return posX;
 	}
 
-	public void iterate(State state, RandomSeededDouble r) {
-		int width = state.getMapWidth();
-		int height = state.getMapHeight();
-		int i = state.getPos(posX, posY);
-		state.setPos(posX,posY,0);
-		int newPosX = posX;
-		int newPosY = posY;
-		switch(0)
-		{
-		case 1: newPosX = posX-1+width; break;
-		case 2: newPosY = posY-1+height; break;
-		case 3: newPosX = posX+1; break;
-		case 4: newPosY = posY+1; break;
-		default: break;
-		}
-		newPosX = newPosX % width;
-		newPosY = newPosY % height;
-		//check if the new spot is free
-		if(state.getPos(posX, posY)==0){
-			posX = newPosX;
-		}
-		state.setPos(posX, posY, i);
+	public int iterate(State state, RandomSeededDouble r) {
+		return 1;
 	}
 	//check is one of his neighbor is the prey
 	//0 no neighbor
@@ -46,6 +26,11 @@ public class GreedyPredator implements Agent{
 	//4 the prey is right
 	public int isCloseToPrey(int[][] map, int height, int width){
 		return 0;
+	}
+
+	public void setPos(int newPosX, int newPosY) {
+		posX = newPosX;
+		posY = newPosY;		
 	}
 	
 }

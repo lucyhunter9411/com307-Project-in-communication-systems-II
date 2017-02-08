@@ -43,4 +43,15 @@ public class State {
 	public int getMapHeight() {
 		return mapHeight;
 	}
+	
+	public void printMapHelper(){
+	
+		for(int i=0;i<mapHeight;i++){
+			for(int j=0;j<mapWidth;j++){
+				System.out.print(cellsMap[j][i]+" ");
+			}
+			System.out.println();
+		}
+		
+	}
 }
