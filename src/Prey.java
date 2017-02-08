@@ -16,32 +16,47 @@ public class Prey implements Agent {
 		return posX;
 	}
 
-	public void iterate(int[][] map,int height,int width, RandomSeededDouble r) {
-		int i = map[posX][posY];
-		map[posX][posY] = 0;
-		double randomDouble = r.generateDouble();
+	public void iterate(State currentState, RandomSeededDouble r) {
+		int width = currentState.getMapWidth();
+		int height = currentState.getMapHeight();
+		int i = currentState.getPos(posX, posY);
+		currentState.setPos(posX,posY,0);
 		int newPosX = posX;
 		int newPosY = posY;
-		if(randomDouble<0.25){
-			newPosX = posX-1 + width;
+		switch(findNextMove(r))
+		{
+		case 1: newPosX = posX-1+width; break;
+		case 2: newPosY = posY-1+height; break;
+		case 3: newPosX = posX+1; break;
+		case 4: newPosY = posY+1; break;
+		default: break;
 		}
-		else if(randomDouble < 0.5){
-			newPosY = posY-1 + height;
-		}
-		else if(randomDouble < 0.75){
-			newPosX = posX+1;
-		}
-		else{
-			newPosY = posY+1;
-		}
-		
 		newPosX = newPosX % width;
 		newPosY = newPosY % height;
 		//check if the new spot is free
-		if(map[newPosX][newPosY]==0){
+		if(currentState.getPos(newPosX, newPosY)==0){
 			posX = newPosX;
 			posY = newPosY;
 		}
-		map[posX][posY] = i;
+		currentState.setPos(posX, posY, i);
+	}
+	//1 go top
+	//2 go left
+	//3 go bottom
+	//4 go right
+	public int findNextMove(RandomSeededDouble r){
+		double randomDouble = r.generateDouble();
+		if(randomDouble<0.25){
+			return 1;
+		}
+		else if(randomDouble < 0.5){
+			return 2;
+		}
+		else if(randomDouble < 0.75){
+			return 3;
+		}
+		else{
+			return 4;
+		}
 	}
 }
