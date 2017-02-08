@@ -2,7 +2,7 @@
 public class State {
 	private int mapHeight;
 	private int mapWidth;
-	private int nbrPredator;
+	//private int nbrPredator;
 	private int[][] cellsMap;
 	
 	public State(int height, int width, int nbrPredator){
@@ -52,6 +52,5 @@ public class State {
 			}
 			System.out.println();
 		}
-		
 	}
 }
