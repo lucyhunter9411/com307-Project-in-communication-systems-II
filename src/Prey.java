@@ -1,11 +1,11 @@
-
 public class Prey implements Agent {
 
 	private int posX,posY;
-	
-	public Prey(int posX, int posY) {
+	private final int agentIndex;
+	public Prey(int posX, int posY, int agentIndex) {
 		this.posX = posX;
 		this.posY = posY;
+		this.agentIndex = agentIndex;
 	}
 
 	public int getPosY() {
@@ -20,28 +20,18 @@ public class Prey implements Agent {
 		return findNextMove(r);
 	}
 	
-	//1 go top
-	//2 go left
-	//3 go bottom
-	//4 go right
+	//return 1 to 4 with each a probability 1/4
 	public int findNextMove(RandomSeededDouble r){
 		double randomDouble = r.generateDouble();
-		if(randomDouble<0.25){
-			return 1;
-		}
-		else if(randomDouble < 0.5){
-			return 2;
-		}
-		else if(randomDouble < 0.75){
-			return 3;
-		}
-		else{
-			return 4;
-		}
+		return (int)(randomDouble * 4) + 1;
 	}
 	
 	public void setPos(int newPosX, int newPosY) {
 		posX = newPosX;
 		posY = newPosY;	
+	}
+	
+	public int getAgentIndex() {
+		return agentIndex;
 	}
 }

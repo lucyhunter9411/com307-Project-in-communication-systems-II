@@ -27,10 +27,10 @@ public class Simulation {
 			posY = pos / mapWidth;
 			if(initialState.setAgentI(posX,posY,i)){
 				if(i == 1){
-					agents.add(new Prey(posX,posY));	
+					agents.add(new Prey(posX,posY,i));	
 				}
 				else{
-					agents.add(new GreedyPredator(posX,posY));
+					agents.add(new GreedyPredator(posX,posY,i));
 				}
 				i++;
 			}
@@ -64,8 +64,8 @@ public class Simulation {
 	public void iterate() {
 		//compute all the agents' next move
 		ArrayList<Integer> directionOfAgents = new ArrayList<Integer>();
-		//1 go top
-		//2 go left
+		//1 go left
+		//2 go top
 		//3 go bottom
 		//4 go right
 		for(Agent a:agents){
@@ -76,6 +76,7 @@ public class Simulation {
 		for(int i=0;i<directionOfAgents.size();i++){
 			modifyState(initialState,agents.get(i),directionOfAgents.get(i));
 		}
+		//initialState.printAgentCoordinateHelper();
 	}
 
 	public void modifyState(State currentState, Agent currentAgent, int agentNextDirection){
@@ -95,9 +96,8 @@ public class Simulation {
 		newPosX = newPosX % mapWidth;
 		newPosY = newPosY % mapHeight;
 		//check if the new spot is free and set the new position of the agent
-		if(currentState.getPos(newPosX, newPosY)==0){
+		if(currentState.setAgentI(newPosX, newPosY, i)){
 			currentState.setPos(posX, posY, 0);
-			currentState.setPos(newPosX, newPosY, i);
 			currentAgent.setPos(newPosX,newPosY);
 		}
 

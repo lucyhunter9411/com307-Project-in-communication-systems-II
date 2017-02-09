@@ -11,8 +11,8 @@ import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class Main extends JPanel{
-	public final static int WINDOW_HEIGHT = 1250;
-	public final static int WINDOW_WEIGHT = 2500;
+	public final static int WINDOW_HEIGHT = 1000;
+	public final static int WINDOW_WEIGHT = 2000;
 	static Simulation s;
 	public static void main(String[] args) {
 		s = new Simulation(10,10,4);
