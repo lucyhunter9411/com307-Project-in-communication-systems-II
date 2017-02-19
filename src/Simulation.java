@@ -9,7 +9,7 @@ public class Simulation {
 	private int nbrPredator;
 	private State initialState;
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
-	private RandomSeededDouble rand = new RandomSeededDouble(123456789);
+	private RandomSeededDouble rand = new RandomSeededDouble(1234567890);
 
 	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator){
 		initialState = new State(mapSizeHeight,mapSizeWidth,numberPredator);
@@ -61,13 +61,13 @@ public class Simulation {
 		}
 	}
 
-	public void iterate() {
+	public boolean iterate() {
 		//compute all the agents' next move
 		ArrayList<Integer> directionOfAgents = new ArrayList<Integer>();
 		//1 go left
 		//2 go top
-		//3 go bottom
-		//4 go right
+		//3 go right
+		//4 go bottom
 		for(Agent a:agents){
 			directionOfAgents.add(a.iterate(initialState, rand));
 		}
@@ -76,7 +76,12 @@ public class Simulation {
 		for(int i=0;i<directionOfAgents.size();i++){
 			modifyState(initialState,agents.get(i),directionOfAgents.get(i));
 		}
-		//initialState.printAgentCoordinateHelper();
+		//check if the prey is captured
+		if(initialState.isPreyCaptured()){
+			System.out.println("captured");
+			return true;
+		}
+		return false;
 	}
 
 	public void modifyState(State currentState, Agent currentAgent, int agentNextDirection){

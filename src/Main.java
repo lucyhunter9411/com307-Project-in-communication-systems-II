@@ -29,7 +29,7 @@ public class Main extends JPanel{
 	    button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	s.iterate();
+            	boolean isPreyCaptured = s.iterate();
             	mapPanel.repaint();
             }
         });

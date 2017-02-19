@@ -56,6 +56,40 @@ public class State {
 		return agentsCoordinate;
 	}
 	
+	public int getPreyPosX(){
+		return agentsCoordinate[0][0];
+	}
+	
+	public int getPreyPosY(){
+		return agentsCoordinate[0][1];
+	}
+	
+	public boolean isPreyCaptured(){
+		int x = getPreyPosX();
+		int y = getPreyPosY();
+		return isTopBlocked(x,y) && isLeftBlocked(x,y) && isRightBlocked(x,y) && isBottomBlocked(x,y);
+	}
+	
+	public boolean isLeftBlocked(int x, int y) {
+		int leftPosX = (x + mapWidth - 1) % mapWidth;
+		return cellsMap[leftPosX][y] != 0;
+	}
+	
+	public boolean isRightBlocked(int x, int y) {
+		int rightPosX = (x + 1) % mapWidth;
+		return cellsMap[rightPosX][y] != 0;
+	}
+	
+	public boolean isTopBlocked(int x, int y) {
+		int topPosY = (y + mapHeight - 1) % mapHeight;
+		return cellsMap[x][topPosY] != 0;
+	}
+	
+	public boolean isBottomBlocked(int x, int y) {
+		int bottomPosY = (y + 1) % mapHeight;
+		return cellsMap[x][bottomPosY] != 0;
+	}
+
 	public void printMapHelper(){
 		for(int i=0;i<mapHeight;i++){
 			for(int j=0;j<mapWidth;j++){
