@@ -2,4 +2,6 @@
 
 ## Supervisor: Panayiotis Danassis
 
+## Professor: Faltings Boi
+
 ## Spring semester 2017
