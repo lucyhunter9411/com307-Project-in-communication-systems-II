@@ -112,4 +112,8 @@ public class State {
 			System.out.println();
 		}
 	}
+	
+	public int getNbrAgents(){
+		return nbrAgents;
+	}
 }
