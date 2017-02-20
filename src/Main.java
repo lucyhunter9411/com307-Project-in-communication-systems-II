@@ -15,7 +15,7 @@ public class Main extends JPanel{
 	public final static int WINDOW_WEIGHT = 2000;
 	static Simulation s;
 	public static void main(String[] args) {
-		s = new Simulation(10,10,4);
+		s = new Simulation(10,10,4,1234567890);
 		JFrame f = new JFrame();
 		JPanel mapPanel = new Main();
 		JPanel controlPanel = new JPanel();

@@ -9,13 +9,14 @@ public class Simulation {
 	private int nbrPredator;
 	private State initialState;
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
-	private RandomSeededDouble rand = new RandomSeededDouble(1234567890);
+	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator){
+	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed){
 		initialState = new State(mapSizeHeight,mapSizeWidth,numberPredator);
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
 		this.nbrPredator = numberPredator;
+		rand = new RandomSeededDouble(seed);
 
 		//initialize the agents at random position 
 		int pos,posX,posY;
@@ -43,10 +44,12 @@ public class Simulation {
 
 		int squareSize = windowHeight/mapWidth;
 		int r = 2;
+		//draw each square of the grid
 		for(int i=0;i<mapWidth;i++){
 			for(int j=0;j<mapHeight;j++){
 				g.setColor(Color.WHITE);
 				g.fillRect(i*squareSize+r, j*squareSize+r, squareSize-2*r, squareSize-2*r);
+				//draw the agent, the prey is yellow and red others.
 				if(initialState.getPos(i, j) != 0){
 					if(initialState.getPos(i, j) == 1){
 						g.setColor(Color.YELLOW);
@@ -63,11 +66,7 @@ public class Simulation {
 
 	public boolean iterate() {
 		//compute all the agents' next move
-		ArrayList<Integer> directionOfAgents = new ArrayList<Integer>();
-		//1 go left
-		//2 go top
-		//3 go right
-		//4 go bottom
+		ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 		for(Agent a:agents){
 			directionOfAgents.add(a.iterate(initialState, rand));
 		}
@@ -84,7 +83,7 @@ public class Simulation {
 		return false;
 	}
 
-	public void modifyState(State currentState, Agent currentAgent, int agentNextDirection){
+	public void modifyState(State currentState, Agent currentAgent, Direction agentNextDirection){
 		int posX = currentAgent.getPosX();
 		int posY = currentAgent.getPosY();
 		int i = currentState.getPos(posX, posY);
@@ -92,10 +91,10 @@ public class Simulation {
 		int newPosY = posY;
 		switch(agentNextDirection)
 		{
-		case 1: newPosX = posX - 1 + mapWidth; break;
-		case 2: newPosY = posY - 1 + mapHeight; break;
-		case 3: newPosX = posX + 1; break;
-		case 4: newPosY = posY + 1; break;
+		case LEFT: newPosX = posX - 1 + mapWidth; break;
+		case TOP: newPosY = posY - 1 + mapHeight; break;
+		case RIGHT: newPosX = posX + 1; break;
+		case BOTTOM: newPosY = posY + 1; break;
 		default: break;
 		}
 		newPosX = newPosX % mapWidth;

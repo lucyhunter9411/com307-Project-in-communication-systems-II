@@ -1,4 +1,3 @@
-
 public class State {
 	private int mapHeight;
 	private int mapWidth;
@@ -67,27 +66,29 @@ public class State {
 	public boolean isPreyCaptured(){
 		int x = getPreyPosX();
 		int y = getPreyPosY();
-		return isTopBlocked(x,y) && isLeftBlocked(x,y) && isRightBlocked(x,y) && isBottomBlocked(x,y);
+		return isDirectionBlocked(x,y,Direction.LEFT) &&
+			isDirectionBlocked(x,y,Direction.TOP) &&
+			isDirectionBlocked(x,y,Direction.RIGHT) &&
+			isDirectionBlocked(x,y,Direction.BOTTOM);
 	}
 	
-	public boolean isLeftBlocked(int x, int y) {
-		int leftPosX = (x + mapWidth - 1) % mapWidth;
-		return cellsMap[leftPosX][y] != 0;
-	}
-	
-	public boolean isRightBlocked(int x, int y) {
-		int rightPosX = (x + 1) % mapWidth;
-		return cellsMap[rightPosX][y] != 0;
-	}
-	
-	public boolean isTopBlocked(int x, int y) {
-		int topPosY = (y + mapHeight - 1) % mapHeight;
-		return cellsMap[x][topPosY] != 0;
-	}
-	
-	public boolean isBottomBlocked(int x, int y) {
-		int bottomPosY = (y + 1) % mapHeight;
-		return cellsMap[x][bottomPosY] != 0;
+	public boolean isDirectionBlocked(int x, int y, Direction direction) {
+		switch(direction){
+		case LEFT:
+			int leftPosX = (x + mapWidth - 1) % mapWidth;
+			return cellsMap[leftPosX][y] != 0;
+		case TOP:
+			int topPosY = (y + mapHeight - 1) % mapHeight;
+			return cellsMap[x][topPosY] != 0;
+		case RIGHT:
+			int rightPosX = (x + 1) % mapWidth;
+			return cellsMap[rightPosX][y] != 0;
+		case BOTTOM:
+			int bottomPosY = (y + 1) % mapHeight;
+			return cellsMap[x][bottomPosY] != 0;
+		default:
+			return false;
+		}
 	}
 
 	public void printMapHelper(){

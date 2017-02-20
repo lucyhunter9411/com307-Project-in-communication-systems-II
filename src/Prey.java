@@ -16,15 +16,15 @@ public class Prey implements Agent {
 		return posX;
 	}
 
-	public int iterate(State currentState, RandomSeededDouble r) {
+	public Direction iterate(State currentState, RandomSeededDouble r) {
 		return findNextMove(r);
 	}
 	
-	//return 1 to 4 with each a probability 1/4
-	public int findNextMove(RandomSeededDouble r){
+	//return one of the 4 direction with each a probability 1/4
+	public Direction findNextMove(RandomSeededDouble r){
 		double randomDouble = r.generateDouble();
-		return (int)(randomDouble * 4) + 1;
-	}
+		return Direction.values()[(int)(randomDouble * 4)];
+		}
 	
 	public void setPos(int newPosX, int newPosY) {
 		posX = newPosX;
