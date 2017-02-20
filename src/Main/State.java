@@ -1,3 +1,7 @@
+package Main;
+
+import Enum.Direction;
+
 public class State {
 	private int mapHeight;
 	private int mapWidth;

@@ -1,6 +1,10 @@
+package Main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+
+import Actor.*;
+import Enum.Direction;
 
 public class Simulation {
 
@@ -11,7 +15,7 @@ public class Simulation {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed){
+	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, boolean agentType){
 		initialState = new State(mapSizeHeight,mapSizeWidth,numberPredator);
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
@@ -31,7 +35,12 @@ public class Simulation {
 					agents.add(new Prey(posX,posY,i));	
 				}
 				else{
-					agents.add(new GreedyPredator(posX,posY,i));
+					if(agentType){
+						agents.add(new GreedyPredator(posX,posY,i));
+					}
+					else{
+						agents.add(new TeammateAwarePredator(posX,posY,i));
+					}
 				}
 				i++;
 			}

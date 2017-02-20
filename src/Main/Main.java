@@ -1,3 +1,4 @@
+package Main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class Main extends JPanel{
@@ -15,24 +17,40 @@ public class Main extends JPanel{
 	public final static int WINDOW_WEIGHT = 2000;
 	static Simulation s;
 	public static void main(String[] args) {
-		s = new Simulation(10,10,4,1234567890);
+		s = new Simulation(10,10,4,1234567890,true);
 		JFrame f = new JFrame();
 		JPanel mapPanel = new Main();
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new GridLayout(5,5));
-		JButton button = new JButton();
 		mapPanel.setPreferredSize(new Dimension(WINDOW_WEIGHT, WINDOW_HEIGHT));
-		button.setSize(100,100);
-	    button.setVisible(true);
-	    controlPanel.add(button);
-	    button.setText("Iterate");
-	    button.addActionListener(new ActionListener() {
+		
+		//initialize the buttons in the control panel
+		JButton buttonIterate = new JButton();
+		buttonIterate.setSize(100,100);
+	    buttonIterate.setVisible(true);
+	    buttonIterate.setText("Iterate");
+	    buttonIterate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	boolean isPreyCaptured = s.iterate();
+            	s.iterate();
             	mapPanel.repaint();
             }
         });
+	    controlPanel.add(buttonIterate);
+	    JButton buttonStart = new JButton();
+		buttonStart.setSize(100,100);
+	    buttonStart.setVisible(true);
+	    buttonStart.setText("Start");
+	    buttonStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	s.iterate();
+            	mapPanel.repaint();
+            }
+        });
+	    controlPanel.add(buttonStart);
+	    
+	    //add all the panel in the main JFrame
 	    f.setLayout(new GridLayout(1,3));
 		f.add(mapPanel);
 		f.add(controlPanel);

@@ -1,21 +1,15 @@
-public class GreedyPredator implements Agent{
+package Actor;
+import Enum.Direction;
+import Main.RandomSeededDouble;
+import Main.State;
 
-	private final int agentIndex;
-	private int posX, posY;
+public class GreedyPredator extends Agent{
+	
 	public GreedyPredator(int x, int y, int agentIndex){
-		posX = x;
-		posY = y;
-		this.agentIndex = agentIndex;
+		super(x,y,agentIndex);
 	}
 	
-	public int getPosY() {
-		return posY;
-	}
-
-	public int getPosX() {
-		return posX;
-	}
-	
+	@Override
 	public Direction iterate(State state, RandomSeededDouble r) {
 		int width = state.getMapWidth();
 		int height = state.getMapHeight();
@@ -190,14 +184,5 @@ public class GreedyPredator implements Agent{
 			}
 		}
 		throw new AssertionError("We checked that the prey has at least a free neighbor"); 
-	}
-
-	public void setPos(int newPosX, int newPosY) {
-		posX = newPosX;
-		posY = newPosY;		
-	}
-
-	public int getAgentIndex() {
-		return agentIndex;
 	}
 }
