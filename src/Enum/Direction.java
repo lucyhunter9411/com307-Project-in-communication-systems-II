@@ -1,4 +1,4 @@
 package Enum;
 public enum Direction {
-	LEFT, TOP, RIGHT, BOTTOM, NULL;
+	LEFT, TOP, RIGHT, BOTTOM;
 }

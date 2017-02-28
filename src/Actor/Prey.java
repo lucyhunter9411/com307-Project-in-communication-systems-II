@@ -15,4 +15,7 @@ public class Prey extends Agent {
 		double randomDouble = r.generateDouble();
 		return Direction.values()[(int)(randomDouble * 4)];
 	}
+
+	@Override
+	public void initiate(State initialState) {}
 }

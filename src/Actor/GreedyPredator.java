@@ -185,4 +185,9 @@ public class GreedyPredator extends Agent{
 		}
 		throw new AssertionError("We checked that the prey has at least a free neighbor"); 
 	}
+
+	@Override
+	public void initiate(State initialState) {
+		// nothing to initialize for a greedyPredator
+	}
 }

@@ -44,7 +44,11 @@ public class Simulation {
 				}
 				i++;
 			}
-		}	
+		}
+		//initiate the agents with the initialState
+		for(Agent a:agents){
+			a.initiate(initialState);
+		}
 	}
 
 	public void draw(Graphics g, int windowHeight) {

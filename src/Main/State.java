@@ -116,4 +116,34 @@ public class State {
 	public int getNbrAgents(){
 		return nbrAgents;
 	}
+
+	//compute the minimum distance for the agent tagged agentIndex1 to reach agent tagged agentIndex2
+	//direction if not null, compute the distance as if agent2 moved in this direction first
+	public int getDistance(int agentIndex1, int agentIndex2, Direction direction) {
+		assert(agentIndex1 > 0 && agentIndex1 <= nbrAgents);
+		assert(agentIndex2 > 0 && agentIndex2 <= nbrAgents);
+		int posXAgent1 =  agentsCoordinate[agentIndex1-1][0];
+		int posYAgent1 =  agentsCoordinate[agentIndex1-1][1];
+		int posXAgent2 =  agentsCoordinate[agentIndex2-1][0];
+		int posYAgent2 =  agentsCoordinate[agentIndex2-1][1];
+		
+		switch(direction){
+		case LEFT: posXAgent2 = (posXAgent2 - 1 + mapWidth) % mapWidth; break;
+		case TOP: posYAgent2 = (posYAgent2 - 1 + mapHeight) % mapHeight; break;
+		case RIGHT: posXAgent2 = (posXAgent2 + 1) %mapWidth; break;
+		case BOTTOM: posYAgent2 = (posYAgent2 + 1) % mapHeight; break;
+		default: break;
+		}
+		
+		int dx = (posXAgent1 - posXAgent2 + mapWidth) % mapWidth;
+		int dy = (posYAgent1 - posYAgent2 + mapHeight) % mapHeight;
+		//format the dx and dy to be a relative position around the prey: [0 : width-1] -> [-width/2 : width/2]
+				if(dx>mapWidth/2){
+					dx = dx - mapWidth;
+				}
+				if(dy>mapHeight/2){
+					dy = dy - mapHeight;
+				}
+		return Math.abs(dx)+Math.abs(dy);
+	}
 }

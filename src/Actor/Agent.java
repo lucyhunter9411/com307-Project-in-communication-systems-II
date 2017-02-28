@@ -33,4 +33,7 @@ public abstract class Agent {
 	
 	//return {left, top, right, bottom} in function of the previous state
 	public abstract Direction iterate(State state, RandomSeededDouble r);
+
+	//called once for agents for precomputed algorithm on the initialState of the Simulation
+	public abstract void initiate(State initialState);
 }

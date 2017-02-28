@@ -44,8 +44,16 @@ public class Main extends JPanel{
 	    buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	s.iterate();
-            	mapPanel.repaint();
+            	for(int i =0;i<20;i++)
+            	{
+            		try {
+						Thread.sleep(300);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+            		s.iterate();
+            		mapPanel.repaint();
+            	}
             }
         });
 	    controlPanel.add(buttonStart);
