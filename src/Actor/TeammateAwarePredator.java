@@ -2,6 +2,8 @@ package Actor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import Enum.Direction;
@@ -153,7 +155,106 @@ public class TeammateAwarePredator extends Agent{
 
 	//compute the A* path and return the next Direction of the agent to follow the path
 	private Direction getNextAStarPathStep(State state, int destinationX, int destinationY) {
-		// TODO
+
+		// The set of nodes already evaluated.
+		//closedSet := {}
+		ArrayList<Node> closedSet = new ArrayList<Node>();
+		// The set of currently discovered nodes that are not evaluated yet.
+		// Initially, only the start node is known.
+		//openSet := {start}
+		Node startNode = new Node(posX,posY,state.getMapWidth());
+		Node goalNode = new Node(destinationX,destinationY,state.getMapWidth());
+		ArrayList<Node> openSet = new ArrayList<Node>();
+		openSet.add(startNode);
+		// For each node, which node it can most efficiently be reached from.
+		// If a node can be reached from many nodes, cameFrom will eventually contain the
+		// most efficient previous step.
+		//cameFrom := the empty map
+		Map<Node,Node> cameFrom = new HashMap<Node,Node>();
+
+		// For each node, the cost of getting from the start node to that node.
+		//gScore := map with default value of Infinity
+		Map<Node,Integer> gScore = new HashMap<Node,Integer>();
+		// The cost of going from start to start is zero.
+		//gScore[start] := 0 
+		gScore.put(startNode,0);
+		// For each node, the total cost of getting from the start node to the goal
+		// by passing by that node. That value is partly known, partly heuristic.
+		//fScore := map with default value of Infinity
+		Map<Node,Integer> fScore = new HashMap<Node,Integer>();
+ 		// For the first node, that value is completely heuristic.
+		//fScore[start] := heuristic_cost_estimate(start, goal)
+		fScore.put(startNode, state.getDistance(posX,posY,destinationX,destinationY));
+		//while openSet is not empty
+		while(!openSet.isEmpty()){
+			//  current := the node in openSet having the lowest fScore[] value
+			Node currentNode = getNodeWithMinValue(fScore);
+			//if current = goal
+			if(currentNode.equals(goalNode)){
+			//  return reconstruct_path(cameFrom, current)
+				
+			}
+			// openSet.Remove(current)
+			openSet.remove(currentNode);
+			//closedSet.Add(current)
+			closedSet.add(currentNode);
+			//for each neighbor of current
+			
+			//  if neighbor in closedSet
+			//    continue		// Ignore the neighbor which is already evaluated.
+			// The distance from start to a neighbor
+			//tentative_gScore := gScore[current] + dist_between(current, neighbor)
+			//if neighbor not in openSet	// Discover a new node
+			//  openSet.Add(neighbor)
+			//else if tentative_gScore >= gScore[neighbor]
+			//  continue		// This is not a better path.
+
+			// This path is the best until now. Record it!
+			//cameFrom[neighbor] := current
+			//gScore[neighbor] := tentative_gScore
+			//fScore[neighbor] := gScore[neighbor] + heuristic_cost_estimate(neighbor, goal)
+
+			//return failure
+			throw new IllegalStateException("A* didn't found a path");
+		}
+
+		//function reconstruct_path(cameFrom, current)
+		//total_path := [current]
+		//while current in cameFrom.Keys:
+		//current := cameFrom[current]
+		//total_path.append(current)
+		//return total_path
+
 		return Direction.LEFT;
+	}
+	
+	private static Node getNodeWithMinValue(Map<Node,Integer> map) {
+	    Node minKey = null;
+	    int minValue = Integer.MAX_VALUE;
+	    for (Node key : map.keySet()) {
+	        int value = map.get(key);
+	        if (value < minValue) {
+	            minValue = value;
+	            minKey = key;
+	        }
+	    }
+	    return minKey;
+	}
+	
+	private class Node{
+		private int posX;
+		private int posY;
+		private int mapWidth;
+		public Node(int posX, int posY, int mapWidth) {
+			this.posX = posX;
+			this.posY = posY;
+			this.mapWidth = mapWidth;
+		}
+
+		@Override
+		public int hashCode(){
+			return posX + posY * mapWidth;
+		}
+
 	}
 }
