@@ -11,6 +11,7 @@ public class Simulation {
 	private int mapHeight;
 	private int mapWidth;
 	private int nbrPredator;
+	private int nbrOfIteration=0;
 	private State initialState;
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
@@ -90,8 +91,11 @@ public class Simulation {
 		}
 		//check if the prey is captured
 		if(initialState.isPreyCaptured()){
-			System.out.println("captured");
+			System.out.println("captured in "+nbrOfIteration+" steps");
 			return true;
+		}
+		else{
+			nbrOfIteration++;
 		}
 		return false;
 	}
@@ -118,5 +122,9 @@ public class Simulation {
 			currentAgent.setPos(newPosX,newPosY);
 		}
 
+	}
+	
+	public int getNbrOfIteration(){
+		return nbrOfIteration;
 	}
 }
