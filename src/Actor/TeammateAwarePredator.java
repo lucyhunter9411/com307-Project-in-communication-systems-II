@@ -15,7 +15,6 @@ public class TeammateAwarePredator extends Agent{
 		super(x,y,agentIndex);
 	}
 
-
 	@Override
 	//in the case of a teammate aware predator, we precompute the destination(prey's neighbor cell) attributed for this predator
 	public void initiate(State initialState) {

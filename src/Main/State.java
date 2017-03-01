@@ -135,8 +135,12 @@ public class State {
 		default: break;
 		}
 
-		int dx = (posXAgent1 - posXAgent2 + mapWidth) % mapWidth;
-		int dy = (posYAgent1 - posYAgent2 + mapHeight) % mapHeight;
+		return getDistance(posXAgent1, posYAgent1, posXAgent2, posYAgent2);
+	}
+	
+	public int getDistance(int posX1, int posY1, int posX2, int posY2){
+		int dx = (posX1 - posX2 + mapWidth) % mapWidth;
+		int dy = (posY1 - posY2 + mapHeight) % mapHeight;
 		//format the dx and dy to be a relative position around the prey: [0 : width-1] -> [-width/2 : width/2]
 		if(dx>mapWidth/2){
 			dx = dx - mapWidth;
