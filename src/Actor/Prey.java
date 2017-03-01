@@ -8,7 +8,7 @@ public class Prey extends Agent {
 	public Prey(int x, int y, int agentIndex) {
 		super(x,y,agentIndex);
 	}
-	
+
 	@Override
 	public Direction iterate(State currentState, RandomSeededDouble r) {
 		//return one of the 4 direction with each a probability 1/4

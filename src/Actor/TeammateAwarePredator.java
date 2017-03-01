@@ -9,7 +9,7 @@ import Main.RandomSeededDouble;
 import Main.State;
 
 public class TeammateAwarePredator extends Agent{
-	
+
 	private Direction attribuedPreyNeighbor;
 	public TeammateAwarePredator(int x,int y, int agentIndex){
 		super(x,y,agentIndex);
@@ -40,7 +40,7 @@ public class TeammateAwarePredator extends Agent{
 		assert(agentIndex>1 && agentIndex<=5);
 		attribuedPreyNeighbor = directionPerPredator[agentIndex-2];
 	}
-	
+
 	@Override
 	public Direction iterate(State state, RandomSeededDouble r) {
 		/*
@@ -57,37 +57,37 @@ public class TeammateAwarePredator extends Agent{
 		//compute the destionation coordinate
 		//check if the predator is already on the destination
 		switch(attribuedPreyNeighbor){
-			case LEFT:
-				destinationX = (preyX - 1 + width) % width;
-				if(posX == destinationX && posY == destinationY){
-					return Direction.RIGHT;
-				}
-				break;
-			case TOP: 
-				destinationY = (preyY - 1 + height) % height;
-				if(posX == destinationX && posY == destinationY){
-					return Direction.BOTTOM;
-				}; 
-				break;
-			case RIGHT:
-				destinationX = (preyX + 1) % width;
-				if(posX == destinationX && posY == destinationY){
-					return Direction.LEFT;
-				};
-				break;
-			case BOTTOM:
-				destinationY = (preyY + 1) % height;
-				if(posX == destinationX && posY == destinationY){
-					return Direction.TOP;
-				}; 
-				break;
-			default: break;
+		case LEFT:
+			destinationX = (preyX - 1 + width) % width;
+			if(posX == destinationX && posY == destinationY){
+				return Direction.RIGHT;
+			}
+			break;
+		case TOP: 
+			destinationY = (preyY - 1 + height) % height;
+			if(posX == destinationX && posY == destinationY){
+				return Direction.BOTTOM;
+			}; 
+			break;
+		case RIGHT:
+			destinationX = (preyX + 1) % width;
+			if(posX == destinationX && posY == destinationY){
+				return Direction.LEFT;
+			};
+			break;
+		case BOTTOM:
+			destinationY = (preyY + 1) % height;
+			if(posX == destinationX && posY == destinationY){
+				return Direction.TOP;
+			}; 
+			break;
+		default: break;
 		}
-		
+
 		//  Otherwise, use A* path planning to select a path, treating other agents as static obstacles.
 		return getNextAStarPathStep(state,destinationX,destinationY);
 	}
-	
+
 	/*
 	 * Compute the minimum distance of each predator with each neighboring cell of the prey
 	 * @param state, the current state
@@ -98,7 +98,7 @@ public class TeammateAwarePredator extends Agent{
 		ArrayList<ArrayList<Integer>> result = new ArrayList<>();
 		Direction[] listDirections = Direction.values();
 		for(int j =0; j<nbrPredator; j++){
-			
+
 			int predatorAgentIndex = j+2;
 			ArrayList<Integer> line = new ArrayList<>();
 			for(int i = 0; i<listDirections.length; i++){
@@ -109,7 +109,7 @@ public class TeammateAwarePredator extends Agent{
 		}
 		return result;
 	}
-	
+
 	/*
 	 * Order the worst predator based on their worst shortest minimum distance
 	 * @param distancePredatorsNeighbors: table of the minimum distance between each predators and each neighbor cells of the prey
@@ -125,8 +125,8 @@ public class TeammateAwarePredator extends Agent{
 		}
 		//Order the predators based on worst shortest distance to a cell neighboring the prey
 		int[] sortedPredatorIndex = IntStream.range(0, nbrPredator)
-		                .boxed().sorted((i, j) -> mappedShortestDistance[j].compareTo(mappedShortestDistance[i]))
-		                .mapToInt(e -> e).toArray();
+				.boxed().sorted((i, j) -> mappedShortestDistance[j].compareTo(mappedShortestDistance[i]))
+				.mapToInt(e -> e).toArray();
 		return sortedPredatorIndex;
 	}
 
@@ -151,7 +151,7 @@ public class TeammateAwarePredator extends Agent{
 		}
 		return result;
 	}
-	
+
 	//compute the A* path and return the next Direction of the agent to follow the path
 	private Direction getNextAStarPathStep(State state, int destinationX, int destinationY) {
 		// TODO

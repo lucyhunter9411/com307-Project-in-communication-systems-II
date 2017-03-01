@@ -8,7 +8,7 @@ public class State {
 	private int nbrAgents;
 	private int[][] cellsMap;
 	private int[][] agentsCoordinate;
-	
+
 	public State(int height, int width, int nbrPredator){
 		nbrAgents = nbrPredator+1;
 		mapHeight=height;
@@ -21,7 +21,7 @@ public class State {
 		}
 		agentsCoordinate = new int[nbrAgents][2];
 	}
-	
+
 	public int[][] getMap(){
 		return cellsMap;
 	}
@@ -38,11 +38,11 @@ public class State {
 		}
 		return false;
 	}
-	
+
 	public int getPos(int posX,int posY){
 		return cellsMap[posX][posY];
 	}
-	
+
 	public void setPos(int posX,int posY,int i){
 		cellsMap[posX][posY] = i;
 	}
@@ -54,28 +54,28 @@ public class State {
 	public int getMapHeight() {
 		return mapHeight;
 	} 
-	
+
 	public int[][] getAgentsCoordinateList(){
 		return agentsCoordinate;
 	}
-	
+
 	public int getPreyPosX(){
 		return agentsCoordinate[0][0];
 	}
-	
+
 	public int getPreyPosY(){
 		return agentsCoordinate[0][1];
 	}
-	
+
 	public boolean isPreyCaptured(){
 		int x = getPreyPosX();
 		int y = getPreyPosY();
 		return isDirectionBlocked(x,y,Direction.LEFT) &&
-			isDirectionBlocked(x,y,Direction.TOP) &&
-			isDirectionBlocked(x,y,Direction.RIGHT) &&
-			isDirectionBlocked(x,y,Direction.BOTTOM);
+				isDirectionBlocked(x,y,Direction.TOP) &&
+				isDirectionBlocked(x,y,Direction.RIGHT) &&
+				isDirectionBlocked(x,y,Direction.BOTTOM);
 	}
-	
+
 	public boolean isDirectionBlocked(int x, int y, Direction direction) {
 		switch(direction){
 		case LEFT:
@@ -103,7 +103,7 @@ public class State {
 			System.out.println();
 		}
 	}
-	
+
 	public void printAgentCoordinateHelper(){
 		for(int i=0;i<2;i++){
 			for(int j=0;j<nbrAgents;j++){
@@ -112,7 +112,7 @@ public class State {
 			System.out.println();
 		}
 	}
-	
+
 	public int getNbrAgents(){
 		return nbrAgents;
 	}
@@ -126,7 +126,7 @@ public class State {
 		int posYAgent1 =  agentsCoordinate[agentIndex1-1][1];
 		int posXAgent2 =  agentsCoordinate[agentIndex2-1][0];
 		int posYAgent2 =  agentsCoordinate[agentIndex2-1][1];
-		
+
 		switch(direction){
 		case LEFT: posXAgent2 = (posXAgent2 - 1 + mapWidth) % mapWidth; break;
 		case TOP: posYAgent2 = (posYAgent2 - 1 + mapHeight) % mapHeight; break;
@@ -134,16 +134,16 @@ public class State {
 		case BOTTOM: posYAgent2 = (posYAgent2 + 1) % mapHeight; break;
 		default: break;
 		}
-		
+
 		int dx = (posXAgent1 - posXAgent2 + mapWidth) % mapWidth;
 		int dy = (posYAgent1 - posYAgent2 + mapHeight) % mapHeight;
 		//format the dx and dy to be a relative position around the prey: [0 : width-1] -> [-width/2 : width/2]
-				if(dx>mapWidth/2){
-					dx = dx - mapWidth;
-				}
-				if(dy>mapHeight/2){
-					dy = dy - mapHeight;
-				}
+		if(dx>mapWidth/2){
+			dx = dx - mapWidth;
+		}
+		if(dy>mapHeight/2){
+			dy = dy - mapHeight;
+		}
 		return Math.abs(dx)+Math.abs(dy);
 	}
 }

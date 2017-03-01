@@ -27,6 +27,9 @@ public class Simulation {
 		int pos,posX,posY;
 		int i=1;
 		int finishedNumberAgents = nbrPredator+1;
+		if(mapSizeHeight*mapSizeWidth<finishedNumberAgents){
+			throw new AssertionError("more agents than cells");
+		}
 		while(i<=finishedNumberAgents){
 			pos = (int)(mapHeight*mapWidth*rand.generateDouble());
 			posX = pos % mapWidth;
@@ -84,7 +87,7 @@ public class Simulation {
 		for(Agent a:agents){
 			directionOfAgents.add(a.iterate(initialState, rand));
 		}
-		
+
 		//apply the agents' next move to compute the new state
 		for(int i=0;i<directionOfAgents.size();i++){
 			modifyState(initialState,agents.get(i),directionOfAgents.get(i));
@@ -123,7 +126,7 @@ public class Simulation {
 		}
 
 	}
-	
+
 	public int getNbrOfIteration(){
 		return nbrOfIteration;
 	}

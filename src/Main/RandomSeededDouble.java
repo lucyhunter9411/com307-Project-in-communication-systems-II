@@ -1,14 +1,16 @@
 package Main;
+
 import java.util.*;
 
 public class RandomSeededDouble {
-	
-	private Random generator; 
-	public RandomSeededDouble(long seed){
+
+	private Random generator;
+
+	public RandomSeededDouble(long seed) {
 		generator = new Random(seed);
 	}
-	
-	public double generateDouble(){
+
+	public double generateDouble() {
 		return generator.nextDouble();
 	}
 }

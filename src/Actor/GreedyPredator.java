@@ -4,11 +4,11 @@ import Main.RandomSeededDouble;
 import Main.State;
 
 public class GreedyPredator extends Agent{
-	
+
 	public GreedyPredator(int x, int y, int agentIndex){
 		super(x,y,agentIndex);
 	}
-	
+
 	@Override
 	public Direction iterate(State state, RandomSeededDouble r) {
 		int width = state.getMapWidth();
@@ -38,11 +38,11 @@ public class GreedyPredator extends Agent{
 			Direction nearestEmptyCellDirection = findNearestEmptyCell(state,dx,dy,width,height);
 			//computes the destination position
 			switch(nearestEmptyCellDirection){
-				case LEFT: destinationX = (preyX - 1 + width) % width; break;
-				case TOP: destinationY = (preyY - 1 + height) % height; break;
-				case RIGHT: destinationX = (preyX + 1) % width; break;
-				case BOTTOM: destinationY = (preyY + 1) % height; break;
-				default: break;
+			case LEFT: destinationX = (preyX - 1 + width) % width; break;
+			case TOP: destinationY = (preyY - 1 + height) % height; break;
+			case RIGHT: destinationX = (preyX + 1) % width; break;
+			case BOTTOM: destinationY = (preyY + 1) % height; break;
+			default: break;
 			}
 			//format the dx and dy to be a relative position around the prey: [0 : width-1] -> [-width/2 : width/2]
 			dx = (destinationX - posX + width) % width;
@@ -109,7 +109,7 @@ public class GreedyPredator extends Agent{
 		double randomDouble = r.generateDouble();
 		return Direction.values()[(int)(randomDouble * 4)];
 	}
-	
+
 	private Direction findNearestEmptyCell(State state, int dx, int dy, int width, int height) {
 		int x = state.getPreyPosX();
 		int y = state.getPreyPosY();
@@ -120,7 +120,7 @@ public class GreedyPredator extends Agent{
 		if(dy>height/2){
 			dy = dy - height;
 		}
-		
+
 		//compute the order of the closest neighbor of the prey in function of the agent position around the prey.
 		Direction[] orderedDirection;
 		if(dx<0){
@@ -173,7 +173,7 @@ public class GreedyPredator extends Agent{
 		}
 		return firstEmptyCell(state,x,y,orderedDirection);
 	}
-	
+
 	//return the first cell of the list which is Empty
 	private Direction firstEmptyCell(State state,int x, int y, Direction[] listDir){
 		Direction testedDirection;

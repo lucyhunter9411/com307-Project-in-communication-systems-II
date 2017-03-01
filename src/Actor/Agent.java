@@ -7,30 +7,30 @@ public abstract class Agent {
 
 	protected int posY, posX;
 	protected int agentIndex;
-	
+
 	public Agent(int x,int y,int agentIndex){
 		posX = x;
 		posY = y;
 		this.agentIndex = agentIndex;
 	}
-	
+
 	public int getPosY(){
 		return posY;
 	}
-	
+
 	public int getPosX(){
 		return posX;
 	}
-	
+
 	public int getAgentIndex(){
 		return agentIndex;
 	}
-	
+
 	public void setPos(int newPosX, int newPosY){
 		posX = newPosX;
 		posY = newPosY;
 	}
-	
+
 	//return {left, top, right, bottom} in function of the previous state
 	public abstract Direction iterate(State state, RandomSeededDouble r);
 
