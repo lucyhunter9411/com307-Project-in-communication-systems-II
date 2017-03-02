@@ -21,7 +21,7 @@ public class Main extends JPanel {
 	static Simulation s;
 
 	public static void main(String[] args) {
-		s = new Simulation(5, 5, 4, 1234567890, true);
+		s = new Simulation(5, 5, 4, 1234567890, false);
 		JFrame f = new JFrame();
 		JPanel mapPanel = new Main();
 		JPanel controlPanel = new JPanel();
@@ -48,14 +48,14 @@ public class Main extends JPanel {
 		buttonRestart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				s = new Simulation(5, 5, 4, Long.parseLong(textFieldSeed.getText()), true);
+				s = new Simulation(5, 5, 4, Long.parseLong(textFieldSeed.getText()), false);
 				mapPanel.repaint();
 			}
 		});
 		JButton buttonCompute1000 = new JButton();
 		buttonCompute1000.setSize(100, 100);
 		buttonCompute1000.setVisible(true);
-		buttonCompute1000.setText("Compute 1000 simulations with Seed");
+		buttonCompute1000.setText("Compute 100 simulations with Seed");
 		buttonCompute1000.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -66,7 +66,8 @@ public class Main extends JPanel {
 				int maxIteration = 0;
 				int currentIteration;
 				for (int i = 0; i < 1000; i++) {
-					s = new Simulation(5, 5, 4, generator.nextLong(), true);
+					long generatedSeed = generator.nextLong();
+					s = new Simulation(5, 5, 4, generatedSeed, false);
 					while (!s.iterate()) {
 					}
 					currentIteration = s.getNbrOfIteration();
@@ -78,10 +79,11 @@ public class Main extends JPanel {
 					if (currentIteration > maxIteration) {
 						maxIteration = currentIteration;
 					}
+					System.out.println("Seed is: "+generatedSeed);
 				}
 				mapPanel.repaint();
 				double average = (double) (accumulator) / 1000;
-				System.out.println("Finished the 1000 simulations; average is " + average + " steps.");
+				System.out.println("Finished the 100 simulations; average is " + average + " steps.");
 				System.out.println("Minimum: " + minIteration + " Maximum: " + maxIteration);
 
 			}
