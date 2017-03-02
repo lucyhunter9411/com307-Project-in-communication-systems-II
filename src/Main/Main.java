@@ -55,7 +55,7 @@ public class Main extends JPanel {
 		JButton buttonCompute1000 = new JButton();
 		buttonCompute1000.setSize(100, 100);
 		buttonCompute1000.setVisible(true);
-		buttonCompute1000.setText("Compute 100 simulations with Seed");
+		buttonCompute1000.setText("Compute 1000 simulations with Seed");
 		buttonCompute1000.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -79,11 +79,11 @@ public class Main extends JPanel {
 					if (currentIteration > maxIteration) {
 						maxIteration = currentIteration;
 					}
-					System.out.println("Seed is: "+generatedSeed);
+					// System.out.println("Seed is: "+generatedSeed);
 				}
 				mapPanel.repaint();
 				double average = (double) (accumulator) / 1000;
-				System.out.println("Finished the 100 simulations; average is " + average + " steps.");
+				System.out.println("Finished the 1000 simulations; average is " + average + " steps.");
 				System.out.println("Minimum: " + minIteration + " Maximum: " + maxIteration);
 
 			}
