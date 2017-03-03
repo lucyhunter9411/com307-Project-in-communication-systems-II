@@ -12,16 +12,21 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class Main extends JPanel {
 	public final static int WINDOW_HEIGHT = 1000;
 	public final static int WINDOW_WEIGHT = 2000;
+	public final static int MAP_HEIGHT = 5;
+	public final static int MAP_WIDTH = 5;
+	public final static long DEFAULT_SEED = 1234567890;
+	public final static int NBR_PREDATOR = 4;
+	public final static int NBR_GREEDY_PREDATOR = 0;
+	public final static int NBR_SIMULATION_STACK = 1000;
 	static Simulation s;
 
 	public static void main(String[] args) {
-		s = new Simulation(5, 5, 4, 1234567890, false);
+		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, DEFAULT_SEED, NBR_GREEDY_PREDATOR);
 		JFrame f = new JFrame();
 		JPanel mapPanel = new Main();
 		JPanel controlPanel = new JPanel();
@@ -29,7 +34,7 @@ public class Main extends JPanel {
 		mapPanel.setPreferredSize(new Dimension(WINDOW_WEIGHT, WINDOW_HEIGHT));
 
 		// initialize the buttons in the control panel
-		JTextField textFieldSeed = new JTextField("1234567890", 12);
+		JTextField textFieldSeed = new JTextField(DEFAULT_SEED + "", 12);
 		JButton buttonIterate = new JButton();
 		buttonIterate.setSize(100, 100);
 		buttonIterate.setVisible(true);
@@ -48,26 +53,27 @@ public class Main extends JPanel {
 		buttonRestart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				s = new Simulation(5, 5, 4, Long.parseLong(textFieldSeed.getText()), false);
+				s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, Long.parseLong(textFieldSeed.getText()),
+						NBR_GREEDY_PREDATOR);
 				mapPanel.repaint();
 			}
 		});
-		JButton buttonCompute1000 = new JButton();
-		buttonCompute1000.setSize(100, 100);
-		buttonCompute1000.setVisible(true);
-		buttonCompute1000.setText("Compute 1000 simulations with Seed");
-		buttonCompute1000.addActionListener(new ActionListener() {
+		JButton buttonComputeAverage = new JButton();
+		buttonComputeAverage.setSize(100, 100);
+		buttonComputeAverage.setVisible(true);
+		buttonComputeAverage.setText("Compute " + NBR_SIMULATION_STACK + " simulations with Seed");
+		buttonComputeAverage.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				long seed = Long.parseLong(textFieldSeed.getText());
-				Random generator = new Random(seed);
+				long initialSeed = Long.parseLong(textFieldSeed.getText());
+				Random generator = new Random(initialSeed);
 				long accumulator = 0;
 				int minIteration = Integer.MAX_VALUE;
 				int maxIteration = 0;
 				int currentIteration;
-				for (int i = 0; i < 1000; i++) {
+				for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
 					long generatedSeed = generator.nextLong();
-					s = new Simulation(5, 5, 4, generatedSeed, false);
+					s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, generatedSeed, NBR_GREEDY_PREDATOR);
 					while (!s.iterate()) {
 					}
 					currentIteration = s.getNbrOfIteration();
@@ -82,8 +88,9 @@ public class Main extends JPanel {
 					// System.out.println("Seed is: "+generatedSeed);
 				}
 				mapPanel.repaint();
-				double average = (double) (accumulator) / 1000;
-				System.out.println("Finished the 1000 simulations; average is " + average + " steps.");
+				double average = (double) (accumulator) / NBR_SIMULATION_STACK;
+				System.out.println(
+						"Finished the " + NBR_SIMULATION_STACK + " simulations; average is " + average + " steps.");
 				System.out.println("Minimum: " + minIteration + " Maximum: " + maxIteration);
 
 			}
@@ -91,7 +98,7 @@ public class Main extends JPanel {
 		controlPanel.add(textFieldSeed);
 		controlPanel.add(buttonIterate);
 		controlPanel.add(buttonRestart);
-		controlPanel.add(buttonCompute1000);
+		controlPanel.add(buttonComputeAverage);
 		// add all the panel in the main JFrame
 		f.setLayout(new GridLayout(1, 3));
 		f.add(mapPanel);

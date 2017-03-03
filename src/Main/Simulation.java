@@ -2,6 +2,7 @@ package Main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 import Actor.*;
 import Enum.Direction;
@@ -16,7 +17,7 @@ public class Simulation {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, boolean agentType){
+	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, int nbrGreedyPredator){
 		initialState = new State(mapSizeHeight,mapSizeWidth,numberPredator);
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
@@ -30,6 +31,10 @@ public class Simulation {
 		if(mapSizeHeight*mapSizeWidth<finishedNumberAgents){
 			throw new AssertionError("more agents than cells");
 		}
+		if(nbrGreedyPredator>numberPredator){
+			throw new InputMismatchException("more greedy predator than the total of predator");
+		}
+		int greedyPredatorToAdd = nbrGreedyPredator;
 		while(i<=finishedNumberAgents){
 			pos = (int)(mapHeight*mapWidth*rand.generateDouble());
 			posX = pos % mapWidth;
@@ -39,8 +44,9 @@ public class Simulation {
 					agents.add(new Prey(posX,posY,i));	
 				}
 				else{
-					if(agentType){
+					if(greedyPredatorToAdd>0){
 						agents.add(new GreedyPredator(posX,posY,i));
+						greedyPredatorToAdd--;
 					}
 					else{
 						agents.add(new TeammateAwarePredator(posX,posY,i));

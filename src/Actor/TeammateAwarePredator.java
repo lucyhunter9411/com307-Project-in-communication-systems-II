@@ -63,8 +63,7 @@ public class TeammateAwarePredator extends Agent {
 		int height = state.getMapHeight();
 		int destinationX = preyX;
 		int destinationY = preyY;
-		// initiate(state);
-		// compute the destionation coordinate
+		// compute the destination coordinate
 		// check if the predator is already on the destination
 		switch (attribuedPreyNeighbor) {
 		case LEFT:
