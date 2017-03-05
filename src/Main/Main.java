@@ -21,7 +21,7 @@ public class Main extends JPanel {
 	public final static int MAP_WIDTH = 5;
 	public final static long DEFAULT_SEED = 1234567890;
 	public final static int NBR_PREDATOR = 4;
-	public final static int NBR_GREEDY_PREDATOR = 0;
+	public final static int NBR_GREEDY_PREDATOR = 4;
 	public final static int NBR_SIMULATION_STACK = 1000;
 	static Simulation s;
 
