@@ -93,7 +93,6 @@ public class Simulation {
 		for(Agent a:agents){
 			directionOfAgents.add(a.iterate(initialState, rand));
 		}
-
 		//apply the agents' next move to compute the new state
 		for(int i=0;i<directionOfAgents.size();i++){
 			modifyState(initialState,agents.get(i),directionOfAgents.get(i));
@@ -109,7 +108,13 @@ public class Simulation {
 		return false;
 	}
 
-	public void modifyState(State currentState, Agent currentAgent, Direction agentNextDirection){
+	/*
+	 * @param currentState: the state we are modifying
+	 * @param currentAgent: the actual Agent that we move the position
+	 * @param agentNextDirection: the direction in which the Agent will move
+	 * @return boolean: true if the agent moved, false if the agent was blocked by another agent in the destination cell 
+	 */
+	public boolean modifyState(State currentState, Agent currentAgent, Direction agentNextDirection){
 		int posX = currentAgent.getPosX();
 		int posY = currentAgent.getPosY();
 		int i = currentState.getPos(posX, posY);
@@ -129,8 +134,9 @@ public class Simulation {
 		if(currentState.setAgentI(newPosX, newPosY, i)){
 			currentState.setPos(posX, posY, 0);
 			currentAgent.setPos(newPosX,newPosY);
+			return true;
 		}
-
+		return false;
 	}
 
 	public int getNbrOfIteration(){
