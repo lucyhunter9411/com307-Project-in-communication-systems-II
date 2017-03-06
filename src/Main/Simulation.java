@@ -92,6 +92,7 @@ public class Simulation {
 			directionOfAgents.add(a.iterate(initialState, rand));
 		}
 		// apply the agents' next move to compute the new state
+		// done in a way that all the movements are done at the same time and not sequentially, avoiding collisions
 		boolean[] didAgentMoved = new boolean[directionOfAgents.size()];
 		for (int i = 0; i < directionOfAgents.size(); i++) {
 			didAgentMoved[i] = false;
