@@ -7,6 +7,8 @@ public class MonteCarloNode {
 
 	private State nodeState;
 	private MonteCarloNode[] childsNode = new MonteCarloNode[4];
+	private double pointsEarned = 0;
+	private int nodeTry = 0;
 	public MonteCarloNode(State state) {
 		nodeState = state.clone();
 	}
@@ -24,13 +26,15 @@ public class MonteCarloNode {
 	
 	public MonteCarloNode computeChild(Direction d){
 		MonteCarloNode currentChild = getChild(d);
+		//already computed
 		if(currentChild!=null){
 			return currentChild;
 		}
 		else{
 			State nextState = nodeState.clone();
 			//TODO MODIFY THE STATE TO THE NEXT NODE
-			nextState.
+			//the problem is the RNG
+			//nextState.
 			MonteCarloNode newChild = new MonteCarloNode(nextState);
 			switch(d){
 				case LEFT: childsNode[0] = newChild; break;
