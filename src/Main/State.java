@@ -21,6 +21,14 @@ public class State {
 		}
 		agentsCoordinate = new int[nbrAgents][2];
 	}
+	
+	private State(int mapHeight, int mapWidth, int nbrAgents, int[][] cellsMap, int[][] agentsCoordinate){
+		this.mapHeight = mapHeight;
+		this.mapWidth = mapWidth;
+		this.nbrAgents = nbrAgents;
+		this.cellsMap = cellsMap.clone();
+		this.agentsCoordinate = agentsCoordinate.clone();
+	}
 
 	public int[][] getMap(){
 		return cellsMap;
@@ -149,5 +157,12 @@ public class State {
 			dy = dy - mapHeight;
 		}
 		return Math.abs(dx)+Math.abs(dy);
+	}
+
+	/*
+	 * Perform a deep copy of this state
+	 */
+	public State clone() {
+		return new State(mapWidth,mapHeight,nbrAgents,cellsMap,agentsCoordinate);
 	}
 }
