@@ -94,13 +94,13 @@ public class Simulation {
 		// apply the agents' next move to compute the new state
 		boolean[] didAgentMoved = new boolean[directionOfAgents.size()];
 		for (int i = 0; i < directionOfAgents.size(); i++) {
-			didAgentMoved[i]=false;
+			didAgentMoved[i] = false;
 		}
 		boolean changmentAppliedThisLoop = true;
 		while (changmentAppliedThisLoop) {
 			changmentAppliedThisLoop = false;
 			for (int i = 0; i < directionOfAgents.size(); i++) {
-				if(!didAgentMoved[i]){
+				if (!didAgentMoved[i]) {
 					boolean hasAgentMoved = modifyState(initialState, agents.get(i), directionOfAgents.get(i));
 					if (hasAgentMoved) {
 						changmentAppliedThisLoop = true;
