@@ -23,6 +23,7 @@ public class Main extends JPanel {
 	// NBR_PREDATOR must be 4 if we use at least one team mate aware predator
 	// TODO
 	public final static int NBR_PREDATOR = 4;
+	public final static boolean USE_ONE_MTC_PREDATOR = true; 
 	public final static int NBR_GREEDY_PREDATOR = 0;
 	public final static int NBR_SIMULATION_STACK = 1000;
 	static Simulation s;
