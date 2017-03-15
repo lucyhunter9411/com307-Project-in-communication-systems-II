@@ -1,25 +1,27 @@
 package Actor;
 
 import Enum.Direction;
-import Main.RandomSeededDouble;
 import Main.State;
+import MonteCarlo.MonteCarloTree;
 
 public class MonteCarloPredator extends Agent {
-
-	public MonteCarloPredator(int x, int y, int agentIndex) {
-		super(x, y, agentIndex);
+	MonteCarloTree monteCarloTree;
+	boolean allOtherAgentsGreedy = true;
+	private final int MAX_ITERATION = 200;
+	private final int TREE_THRESHOLD = 12;
+	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed) {
+		super(x, y, agentIndex, randSeed);
 	}
 
 	@Override
-	public Direction iterate(State state, RandomSeededDouble r) {
-		// TODO Auto-generated method stub
+	public Direction iterate(State state) {
 		return null;
 	}
 
 	@Override
 	public void initiate(State initialState) {
-		// TODO Auto-generated method stub
-		
+		monteCarloTree = new MonteCarloTree(initialState, TREE_THRESHOLD, allOtherAgentsGreedy);
+		monteCarloTree.computePath(MAX_ITERATION);
 	}
 
 }

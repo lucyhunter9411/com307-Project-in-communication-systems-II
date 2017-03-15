@@ -24,12 +24,12 @@ public class Main extends JPanel {
 	// TODO
 	public final static int NBR_PREDATOR = 4;
 	public final static boolean USE_ONE_MTC_PREDATOR = true; 
-	public final static int NBR_GREEDY_PREDATOR = 0;
+	public final static int NBR_GREEDY_PREDATOR = 3;
 	public final static int NBR_SIMULATION_STACK = 1000;
 	static Simulation s;
 
 	public static void main(String[] args) {
-		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, DEFAULT_SEED, NBR_GREEDY_PREDATOR);
+		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, DEFAULT_SEED, NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
 		JFrame f = new JFrame();
 		JPanel mapPanel = new Main();
 		JPanel controlPanel = new JPanel();
@@ -56,8 +56,7 @@ public class Main extends JPanel {
 		buttonRestart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, Long.parseLong(textFieldSeed.getText()),
-						NBR_GREEDY_PREDATOR);
+				s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, Long.parseLong(textFieldSeed.getText()),NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
 				mapPanel.repaint();
 			}
 		});
@@ -76,7 +75,7 @@ public class Main extends JPanel {
 				int currentIteration;
 				for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
 					long generatedSeed = generator.nextLong();
-					s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, generatedSeed, NBR_GREEDY_PREDATOR);
+					s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, generatedSeed, NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
 					while (!s.iterate()) {
 					}
 					currentIteration = s.getNbrOfIteration();

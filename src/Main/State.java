@@ -1,5 +1,8 @@
 package Main;
 
+import java.util.ArrayList;
+
+import Actor.Agent;
 import Enum.Direction;
 
 public class State {
@@ -123,6 +126,67 @@ public class State {
 
 	public int getNbrAgents(){
 		return nbrAgents;
+	}
+
+	public void modifyState(ArrayList<Direction> directionOfAgents, ArrayList<Agent> agents){
+		boolean[] didAgentMoved = new boolean[directionOfAgents.size()];
+		for (int i = 0; i < directionOfAgents.size(); i++) {
+			didAgentMoved[i] = false;
+		}
+		boolean changmentAppliedThisLoop = true;
+		while (changmentAppliedThisLoop) {
+			changmentAppliedThisLoop = false;
+			for (int i = 0; i < directionOfAgents.size(); i++) {
+				if (!didAgentMoved[i]) {
+					boolean hasAgentMoved = modifyStateForAgent(agents.get(i), directionOfAgents.get(i));
+					if (hasAgentMoved) {
+						changmentAppliedThisLoop = true;
+						didAgentMoved[i] = hasAgentMoved;
+					}
+				}
+			}
+		}
+	}
+	
+	/*
+	 * @param currentAgent: the actual Agent that we move the position
+	 * 
+	 * @param agentNextDirection: the direction in which the Agent will move
+	 * 
+	 * @return boolean: true if the agent moved, false if the agent was blocked
+	 * by another agent in the destination cell
+	 */
+	private boolean modifyStateForAgent(Agent currentAgent, Direction agentNextDirection) {
+			int posX = currentAgent.getPosX();
+			int posY = currentAgent.getPosY();
+			int i = getPos(posX, posY);
+			int newPosX = posX;
+			int newPosY = posY;
+			switch (agentNextDirection) {
+			case LEFT:
+				newPosX = posX - 1 + mapWidth;
+				break;
+			case TOP:
+				newPosY = posY - 1 + mapHeight;
+				break;
+			case RIGHT:
+				newPosX = posX + 1;
+				break;
+			case BOTTOM:
+				newPosY = posY + 1;
+				break;
+			default:
+				break;
+			}
+			newPosX = newPosX % mapWidth;
+			newPosY = newPosY % mapHeight;
+			// check if the new spot is free and set the new position of the agent
+			if (setAgentI(newPosX, newPosY, i)) {
+				setPos(posX, posY, 0);
+				currentAgent.setPos(newPosX, newPosY);
+				return true;
+			}
+			return false;
 	}
 
 	//compute the minimum distance for the agent tagged agentIndex1 to reach agent tagged agentIndex2

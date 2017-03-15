@@ -1,16 +1,22 @@
 package MonteCarlo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import Enum.Direction;
 import Main.State;
 
 public class MonteCarloNode {
 
 	private State nodeState;
+	private MonteCarloNode parentNode;
+	private final int depth;
 	private MonteCarloNode[] childsNode = new MonteCarloNode[4];
 	private double pointsEarned = 0;
 	private int nodeTry = 0;
-	public MonteCarloNode(State state) {
+	public MonteCarloNode(State state, MonteCarloNode parentNode, int depth) {
 		nodeState = state.clone();
+		this.depth = depth;
 	}
 
 	public MonteCarloNode getChild(Direction d){
@@ -24,7 +30,7 @@ public class MonteCarloNode {
 		}
 	}
 	
-	public MonteCarloNode computeChild(Direction d){
+	public MonteCarloNode computeChild(Direction d, boolean areAllAgentGreedy){
 		MonteCarloNode currentChild = getChild(d);
 		//already computed
 		if(currentChild!=null){
@@ -33,9 +39,8 @@ public class MonteCarloNode {
 		else{
 			State nextState = nodeState.clone();
 			//TODO MODIFY THE STATE TO THE NEXT NODE
-			//the problem is the RNG
-			//nextState.
-			MonteCarloNode newChild = new MonteCarloNode(nextState);
+			nextState.modifyState(null,null);
+			MonteCarloNode newChild = new MonteCarloNode(nextState,this , depth+1);
 			switch(d){
 				case LEFT: childsNode[0] = newChild; break;
 				case TOP: childsNode[1] = newChild; break;
@@ -50,5 +55,54 @@ public class MonteCarloNode {
 	
 	public State getNodeState(){
 		return nodeState;
+	}
+
+	public boolean hasWon() {
+		return nodeState.isPreyCaptured();
+	}
+
+	public boolean hasLost(int depthThreshold) {
+		return depth >= depthThreshold;
+	}
+
+	public void propagateWin() {
+		nodeTry++;
+		pointsEarned++;
+		if(parentNode!=null){
+			parentNode.propagateWin();
+		}
+	}
+	
+	public void propagateLose() {
+		nodeTry++;
+		pointsEarned--;
+		if(parentNode!=null){
+			parentNode.propagateLose();
+		}
+	}
+
+	public Direction computeBestUTC() {
+		Map<Direction,Double> nextNodeUTCValue = new HashMap<>();
+		for(Direction d: Direction.values()){
+			//TODO Whatsupp with null?
+			double wi = pointsEarned;
+			double ni = nodeTry;
+			double t = getChild(d).nodeTry;
+			double UTCValue = wi/ni + Math.sqrt(2*Math.log(t)/ni);
+			nextNodeUTCValue.put(d, UTCValue);
+		}
+		//TODO find the bigger
+		return null;
+	}
+	
+	@Override 
+	public String toString(){
+		String childNodeString="";
+		for(MonteCarloNode c :childsNode){
+			if(c!=null){
+				childNodeString = childNodeString +"\n	=> "+c.toString();
+			}
+		}
+		return "Node[w:"+pointsEarned+" t:"+nodeTry+"]"+childNodeString;
 	}
 }

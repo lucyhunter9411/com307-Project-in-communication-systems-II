@@ -1,17 +1,16 @@
 package Actor;
 
 import Enum.Direction;
-import Main.RandomSeededDouble;
 import Main.State;
 
 public class GreedyPredator extends Agent {
 
-	public GreedyPredator(int x, int y, int agentIndex) {
-		super(x, y, agentIndex);
+	public GreedyPredator(int x, int y, int agentIndex, long randSeed) {
+		super(x, y, agentIndex, randSeed);
 	}
 
 	@Override
-	public Direction iterate(State state, RandomSeededDouble r) {
+	public Direction iterate(State state) {
 		int width = state.getMapWidth();
 		int height = state.getMapHeight();
 		int preyX = state.getPreyPosX();
@@ -114,7 +113,7 @@ public class GreedyPredator extends Agent {
 			}
 		}
 		// Otherwise, move randomly.
-		double randomDouble = r.generateDouble();
+		double randomDouble = rand.generateDouble();
 		return Direction.values()[(int) (randomDouble * 4)];
 	}
 

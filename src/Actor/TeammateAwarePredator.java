@@ -8,15 +8,14 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import Enum.Direction;
-import Main.RandomSeededDouble;
 import Main.State;
 
 public class TeammateAwarePredator extends Agent {
 
 	private Direction attribuedPreyNeighbor;
 
-	public TeammateAwarePredator(int x, int y, int agentIndex) {
-		super(x, y, agentIndex);
+	public TeammateAwarePredator(int x, int y, int agentIndex, long randSeed) {
+		super(x, y, agentIndex, randSeed);
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class TeammateAwarePredator extends Agent {
 	}
 
 	@Override
-	public Direction iterate(State state, RandomSeededDouble r) {
+	public Direction iterate(State state) {
 		/*
 		 * If the predator is already at the destination, try to move onto the
 		 * prey so that if it moves, the predator will follow.
@@ -99,7 +98,7 @@ public class TeammateAwarePredator extends Agent {
 
 		// Otherwise, use A* path planning to select a path, treating other
 		// agents as static obstacles.
-		return getNextAStarPathStep(state, destinationX, destinationY, r);
+		return getNextAStarPathStep(state, destinationX, destinationY);
 	}
 
 	/*
@@ -185,7 +184,7 @@ public class TeammateAwarePredator extends Agent {
 	// compute the A* path and return the next Direction of the agent to follow
 	// the path algorithm comments are from
 	// https://en.wikipedia.org/wiki/A%2a_search_algorithm
-	private Direction getNextAStarPathStep(State state, int destinationX, int destinationY, RandomSeededDouble r) {
+	private Direction getNextAStarPathStep(State state, int destinationX, int destinationY) {
 		// The set of nodes already evaluated.
 		// closedSet := {}
 		HashSet<Node> closedSet = new HashSet<Node>();
@@ -275,7 +274,7 @@ public class TeammateAwarePredator extends Agent {
 		// instead of an error, just move randomly
 		// throw new IllegalStateException("A* didn't found a path from
 		// "+startNode+" to "+goalNode);
-		double randomDouble = r.generateDouble();
+		double randomDouble = rand.generateDouble();
 		return Direction.values()[(int) (randomDouble * 4)];
 	}
 

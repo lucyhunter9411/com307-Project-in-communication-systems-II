@@ -13,4 +13,8 @@ public class RandomSeededDouble {
 	public double generateDouble() {
 		return generator.nextDouble();
 	}
+
+	public long generateLong() {
+		return generator.nextLong();
+	}
 }
