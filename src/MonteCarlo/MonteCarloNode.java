@@ -19,6 +19,7 @@ public class MonteCarloNode {
 	public MonteCarloNode(State state, MonteCarloNode parentNode, int depth) {
 		nodeState = state.clone();
 		this.depth = depth;
+		this.parentNode = parentNode;
 	}
 
 	public MonteCarloNode getChild(Direction d) {
@@ -45,7 +46,7 @@ public class MonteCarloNode {
 		} else {
 			State nextState = nodeState.clone();
 			// TODO MODIFY THE STATE TO THE NEXT NODE
-			nextState.modifyState(null, null);
+			nextState.computeNextMTCNodeState(d);
 			MonteCarloNode newChild = new MonteCarloNode(nextState, this, depth + 1);
 			switch (d) {
 			case LEFT:
@@ -122,17 +123,18 @@ public class MonteCarloNode {
 		}
 		//return the direction with the bigger UTC
 		int index = (int) (Math.random()*bestDirection.size());
+		//System.out.println(bestDirection + " " + maxUTCValue+" "+bestDirection.get(index));
 		return bestDirection.get(index);
 	}
 
 	@Override
 	public String toString() {
 		String childNodeString = "";
-		for (MonteCarloNode c : childsNode) {
-			if (c != null) {
-				childNodeString = childNodeString + "\n	=> " + c.toString();
+		for (Direction d : Direction.values()) {
+			if (getChild(d) != null) {
+				childNodeString = childNodeString + "\n	=> D:"+ d +" "+ getChild(d).toString();
 			}
 		}
-		return "Node[w:" + pointsEarned + " t:" + nodeTry + "]" + childNodeString;
+		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]" + childNodeString;
 	}
 }

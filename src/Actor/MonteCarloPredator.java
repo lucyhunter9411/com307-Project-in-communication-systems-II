@@ -15,6 +15,7 @@ public class MonteCarloPredator extends Agent {
 
 	@Override
 	public Direction iterate(State state) {
+		System.out.println(monteCarloTree);
 		return Direction.LEFT;
 	}
 

@@ -26,15 +26,15 @@ public class MonteCarloTree {
 	}
 	
 	public void computeMCT(int nbrIteration){
-		MonteCarloNode currentNode = baseNode;
+		MonteCarloNode currentNode;
 		for(int i=0; i<nbrIteration; i++){
+			currentNode = baseNode;
 			//the currentNode didn't win or lose
 			while(!(currentNode.hasWon()||currentNode.hasLost(depthThreshold))){
 				//TODO
 				Direction nextDirection = currentNode.computeBestUTC();
 				//the next node is the UTC selected child of currentNode
 				currentNode = currentNode.computeChild(nextDirection, allAgentGreedy);
-				
 			}
 			//the currentNode has won
 			if(currentNode.hasWon()){

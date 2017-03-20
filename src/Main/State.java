@@ -229,4 +229,8 @@ public class State {
 	public State clone() {
 		return new State(mapWidth,mapHeight,nbrAgents,cellsMap,agentsCoordinate);
 	}
+
+	public void computeNextMTCNodeState(Direction d) {
+		//TODO
+	}
 }
