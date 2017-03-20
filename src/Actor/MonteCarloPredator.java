@@ -15,7 +15,7 @@ public class MonteCarloPredator extends Agent {
 
 	@Override
 	public Direction iterate(State state) {
-		return null;
+		return Direction.LEFT;
 	}
 
 	@Override

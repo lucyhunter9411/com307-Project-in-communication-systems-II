@@ -18,7 +18,8 @@ public class Simulation {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, int nbrGreedyPredator, boolean useOneMtcPredator) {
+	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, int nbrGreedyPredator,
+			boolean useOneMtcPredator) {
 		initialState = new State(mapSizeHeight, mapSizeWidth, numberPredator);
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
@@ -36,6 +37,7 @@ public class Simulation {
 			throw new InputMismatchException("more greedy predator than the total of predator");
 		}
 		int greedyPredatorToAdd = nbrGreedyPredator;
+		boolean addedMTCPredator = false;
 		while (i <= finishedNumberAgents) {
 			pos = (int) (mapHeight * mapWidth * rand.generateDouble());
 			posX = pos % mapWidth;
@@ -44,7 +46,10 @@ public class Simulation {
 				if (i == 1) {
 					agents.add(new Prey(posX, posY, i, rand.generateLong()));
 				} else {
-					if (greedyPredatorToAdd > 0) {
+					if (!addedMTCPredator && useOneMtcPredator) {
+						agents.add(new MonteCarloPredator(posX, posY, i, rand.generateLong()));
+						addedMTCPredator = true;
+					} else if (greedyPredatorToAdd > 0) {
 						agents.add(new GreedyPredator(posX, posY, i, rand.generateLong()));
 						greedyPredatorToAdd--;
 					} else {
@@ -92,9 +97,10 @@ public class Simulation {
 			directionOfAgents.add(a.iterate(initialState));
 		}
 		// apply the agents' next move to compute the new state
-		// done in a way that all the movements are done at the same time and not sequentially, avoiding collisions
-		initialState.modifyState(directionOfAgents,agents);
-		
+		// done in a way that all the movements are done at the same time and
+		// not sequentially, avoiding collisions
+		initialState.modifyState(directionOfAgents, agents);
+
 		// check if the prey is captured
 		if (initialState.isPreyCaptured()) {
 			System.out.println("captured in " + nbrOfIteration + " steps");
