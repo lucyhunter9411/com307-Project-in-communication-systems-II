@@ -9,6 +9,7 @@ public class MonteCarloTree {
 	private State baseState;
 	private MonteCarloNode baseNode;
 	private final int depthThreshold;
+
 	public MonteCarloTree(State initialState, Agent[] generatedAgents, int nbrIteration, int threshold) {
 		depthThreshold = threshold;
 		baseState = initialState.clone();
@@ -19,41 +20,41 @@ public class MonteCarloTree {
 	public MonteCarloNode getBaseNode() {
 		return baseNode;
 	}
-	
-	public void computeMCT(int nbrIteration, Agent[] generatedAgents){
+
+	public void computeMCT(int nbrIteration, Agent[] generatedAgents) {
 		MonteCarloNode currentNode;
-		for(int i=0; i<nbrIteration; i++){
+		for (int i = 0; i < nbrIteration; i++) {
 			currentNode = baseNode;
-			//the currentNode didn't win or lose
-			while(!(currentNode.hasWon()||currentNode.hasLost(depthThreshold))){
-				//TODO
+			// the currentNode didn't win or lose
+			while (!(currentNode.hasWon() || currentNode.hasLost(depthThreshold))) {
+				// TODO
 				Direction nextDirection = currentNode.computeBestUTC();
-				//the next node is the UTC selected child of currentNode
-				//TODO change when agent are not known 
+				// the next node is the UTC selected child of currentNode
+				// TODO change when agent are not known
 				setAgentsOnPosition(currentNode.getNodeState(), generatedAgents);
 				currentNode = currentNode.computeChild(generatedAgents, nextDirection);
 			}
-			//the currentNode has won
-			if(currentNode.hasWon()){
+			// the currentNode has won
+			if (currentNode.hasWon()) {
 				currentNode.propagateWin();
 			}
-			//the currentNode has lost
-			else{
+			// the currentNode has lost
+			else {
 				currentNode.propagateLose();
 			}
 		}
 	}
-	
+
 	private void setAgentsOnPosition(State nodeState, Agent[] generatedAgents) {
 		int[][] CoordList = nodeState.getAgentsCoordinateList();
-		for(int i=0; i<generatedAgents.length; i++){
-			generatedAgents[i].setPos(CoordList[i+2][0], CoordList[i+2][1]);
+		for (int i = 0; i < generatedAgents.length; i++) {
+			generatedAgents[i].setPos(CoordList[i + 2][0], CoordList[i + 2][1]);
 		}
-		
+
 	}
 
 	@Override
-	public String toString(){
-		return "MontecarloTree: baseNode = "+baseNode.toString();
+	public String toString() {
+		return "MontecarloTree: baseNode = " + baseNode.toString();
 	}
 }

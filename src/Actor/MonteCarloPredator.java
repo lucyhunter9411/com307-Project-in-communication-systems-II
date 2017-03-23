@@ -12,6 +12,7 @@ public class MonteCarloPredator extends Agent {
 	private final int TREE_THRESHOLD = 12;
 	private BayesAgentsIdentity bayesAgentsIdentity;
 	private Agent[] generatedAgents;
+
 	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
 	}
@@ -19,26 +20,27 @@ public class MonteCarloPredator extends Agent {
 	@Override
 	public Direction iterate(State state) {
 		bayesAgentsIdentity.newStateInformation(state);
-		//TODO See what bayesAgentsIdentity tells us
-		//now it's 100% sure it's greedy
+		// TODO See what bayesAgentsIdentity tells us
+		// now it's 100% sure it's greedy
 		monteCarloTree = new MonteCarloTree(state, generatedAgents, MAX_ITERATION, TREE_THRESHOLD);
-		//System.out.println(monteCarloTree);
+		// System.out.println(monteCarloTree);
 		return monteCarloTree.getBaseNode().computeBestUTC();
 	}
 
 	@Override
 	public void initiate(State initialState) {
 		bayesAgentsIdentity = new BayesAgentsIdentity(initialState);
-		generatedAgents = createPredator(initialState,initialState.getNbrAgents()-2);
+		generatedAgents = createPredator(initialState, initialState.getNbrAgents() - 2);
 	}
-	
+
 	private Agent[] createPredator(State state, int nbrOtherPredator) {
-		if(nbrOtherPredator<0){
-			throw new IllegalArgumentException("must be a positive value (i.e: there must be at least a prey and this MCPredator, so should be at least 0)");
+		if (nbrOtherPredator < 0) {
+			throw new IllegalArgumentException(
+					"must be a positive value (i.e: there must be at least a prey and this MCPredator, so should be at least 0)");
 		}
 		Agent[] generatedPredatorList = new Agent[nbrOtherPredator];
-		for(int i = 0; i < nbrOtherPredator; i++){
-			generatedPredatorList[i] = (new GreedyPredator(state ,i+3 ,rand.generateLong()));
+		for (int i = 0; i < nbrOtherPredator; i++) {
+			generatedPredatorList[i] = (new GreedyPredator(state, i + 3, rand.generateLong()));
 		}
 		return generatedPredatorList;
 	}

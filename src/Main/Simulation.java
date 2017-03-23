@@ -89,8 +89,9 @@ public class Simulation {
 		}
 		//
 		g.setColor(Color.WHITE);
-		for(int i = 0; i < nbrPredator; i++){
-			g.drawString(" "+i+" ", initialState.getAgentsCoordinateList()[i+1][0] * squareSize + squareSize/2, initialState.getAgentsCoordinateList()[i+1][1] * squareSize + squareSize/2);
+		for (int i = 0; i < nbrPredator; i++) {
+			g.drawString(" " + i + " ", initialState.getAgentsCoordinateList()[i + 1][0] * squareSize + squareSize / 2,
+					initialState.getAgentsCoordinateList()[i + 1][1] * squareSize + squareSize / 2);
 		}
 	}
 

@@ -9,10 +9,11 @@ public class GreedyPredator extends Agent {
 		super(x, y, agentIndex, randSeed);
 	}
 
-	public GreedyPredator(State s, int agentIndex,long randSeed){
-		super(s.getAgentsCoordinateList()[agentIndex-1][0], s.getAgentsCoordinateList()[agentIndex-1][1], agentIndex, randSeed);
+	public GreedyPredator(State s, int agentIndex, long randSeed) {
+		super(s.getAgentsCoordinateList()[agentIndex - 1][0], s.getAgentsCoordinateList()[agentIndex - 1][1],
+				agentIndex, randSeed);
 	}
-	
+
 	@Override
 	public Direction iterate(State state) {
 		int width = state.getMapWidth();

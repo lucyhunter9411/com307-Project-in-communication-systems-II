@@ -32,7 +32,7 @@ public class MonteCarloNode {
 			return childsNode[2];
 		case BOTTOM:
 			return childsNode[3];
-			// unreachable
+		// unreachable
 		default:
 			return null;
 		}
@@ -48,11 +48,11 @@ public class MonteCarloNode {
 			// TODO MODIFY THE STATE TO THE NEXT NODE
 			ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 			ArrayList<Agent> agents = new ArrayList<Agent>();
-			directionOfAgents.add(Direction.values()[(int)(Math.random()*4)]);
-			agents.add(new Prey(nextState,1,0));
-			//value for the agent
+			directionOfAgents.add(Direction.values()[(int) (Math.random() * 4)]);
+			agents.add(new Prey(nextState, 1, 0));
+			// value for the agent
 			directionOfAgents.add(d);
-			agents.add(new GreedyPredator(nextState ,2 ,0));
+			agents.add(new GreedyPredator(nextState, 2, 0));
 			for (Agent a : generatedAgents) {
 				directionOfAgents.add(a.iterate(nodeState));
 				agents.add(a);
@@ -72,7 +72,7 @@ public class MonteCarloNode {
 			case BOTTOM:
 				childsNode[3] = newChild;
 				break;
-				// unreachable
+			// unreachable
 			default:
 				break;
 			}
@@ -115,26 +115,26 @@ public class MonteCarloNode {
 			// TODO Whatsupp with null?
 			double wi = pointsEarned;
 			double ni = nodeTry;
-			if(ni == 0){
-				ni=1;
+			if (ni == 0) {
+				ni = 1;
 			}
 			double t = 1;
 			if (getChild(d) != null) {
 				t = getChild(d).nodeTry;
 			}
 			double UTCValue = wi / ni + Math.sqrt(2 * Math.log(t) / ni);
-			if(UTCValue > maxUTCValue){
+			if (UTCValue > maxUTCValue) {
 				bestDirection.clear();
 				bestDirection.add(d);
 				maxUTCValue = UTCValue;
-			}
-			else if(UTCValue == maxUTCValue){
+			} else if (UTCValue == maxUTCValue) {
 				bestDirection.add(d);
 			}
 		}
-		//return the direction with the bigger UTC
-		int index = (int) (Math.random()*bestDirection.size());
-		//System.out.println(bestDirection + " " + maxUTCValue+" "+bestDirection.get(index));
+		// return the direction with the bigger UTC
+		int index = (int) (Math.random() * bestDirection.size());
+		// System.out.println(bestDirection + " " + maxUTCValue+"
+		// "+bestDirection.get(index));
 		return bestDirection.get(index);
 	}
 
@@ -143,7 +143,7 @@ public class MonteCarloNode {
 		String childNodeString = "";
 		for (Direction d : Direction.values()) {
 			if (getChild(d) != null) {
-				childNodeString = childNodeString + "\n	=> D:"+ d +" "+ getChild(d).toString();
+				childNodeString = childNodeString + "\n	=> D:" + d + " " + getChild(d).toString();
 			}
 		}
 		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]" + childNodeString;
