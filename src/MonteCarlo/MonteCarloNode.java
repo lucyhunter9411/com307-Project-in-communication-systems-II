@@ -5,6 +5,7 @@ import Actor.Agent;
 import Actor.GreedyPredator;
 import Actor.Prey;
 import Enum.Direction;
+import Main.RandomSeededDouble;
 import Main.State;
 
 public class MonteCarloNode {
@@ -15,11 +16,12 @@ public class MonteCarloNode {
 	private MonteCarloNode[] childsNode = new MonteCarloNode[4];
 	private double pointsEarned = 0;
 	private int nodeTry = 0;
-
-	public MonteCarloNode(State state, MonteCarloNode parentNode, int depth) {
+	private RandomSeededDouble rand;
+	public MonteCarloNode(State state, MonteCarloNode parentNode, int depth, RandomSeededDouble rand) {
 		nodeState = state.clone();
 		this.depth = depth;
 		this.parentNode = parentNode;
+		this.rand = rand;
 	}
 
 	public MonteCarloNode getChild(Direction d) {
@@ -48,7 +50,7 @@ public class MonteCarloNode {
 			// TODO MODIFY THE STATE TO THE NEXT NODE
 			ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 			ArrayList<Agent> agents = new ArrayList<Agent>();
-			directionOfAgents.add(Direction.values()[(int) (Math.random() * 4)]);
+			directionOfAgents.add(Direction.values()[(int) (rand.generateDouble() * 4)]);
 			agents.add(new Prey(nextState, 1, 0));
 			// value for the agent
 			directionOfAgents.add(d);
@@ -58,7 +60,7 @@ public class MonteCarloNode {
 				agents.add(a);
 			}
 			nextState.modifyState(directionOfAgents, agents);
-			MonteCarloNode newChild = new MonteCarloNode(nextState, this, depth + 1);
+			MonteCarloNode newChild = new MonteCarloNode(nextState, this, depth + 1, rand);
 			switch (d) {
 			case LEFT:
 				childsNode[0] = newChild;
@@ -113,14 +115,15 @@ public class MonteCarloNode {
 		ArrayList<Direction> bestDirection = new ArrayList<>();
 		for (Direction d : Direction.values()) {
 			// TODO Whatsupp with null?
-			double wi = pointsEarned;
-			double ni = nodeTry;
-			if (ni == 0) {
-				ni = 1;
+			double t = nodeTry;
+			if (t == 0) {
+				t = 1;
 			}
-			double t = 1;
+			double wi=1;
+			double ni=1;
 			if (getChild(d) != null) {
-				t = getChild(d).nodeTry;
+				wi = getChild(d).pointsEarned;
+				ni = getChild(d).nodeTry;
 			}
 			double UTCValue = wi / ni + Math.sqrt(2 * Math.log(t) / ni);
 			if (UTCValue > maxUTCValue) {
@@ -132,7 +135,7 @@ public class MonteCarloNode {
 			}
 		}
 		// return the direction with the bigger UTC
-		int index = (int) (Math.random() * bestDirection.size());
+		int index = (int) (rand.generateDouble() * bestDirection.size());
 		// System.out.println(bestDirection + " " + maxUTCValue+"
 		// "+bestDirection.get(index));
 		return bestDirection.get(index);
@@ -140,11 +143,14 @@ public class MonteCarloNode {
 
 	@Override
 	public String toString() {
-		String childNodeString = "";
+		String childNodeString = "\n";
 		for (Direction d : Direction.values()) {
 			if (getChild(d) != null) {
-				childNodeString = childNodeString + "\n	=> D:" + d + " " + getChild(d).toString();
+				childNodeString = childNodeString + "	=> D:" + d + " " + getChild(d).toString();
 			}
+		}
+		if(depth>1){
+			return "";
 		}
 		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]" + childNodeString;
 	}

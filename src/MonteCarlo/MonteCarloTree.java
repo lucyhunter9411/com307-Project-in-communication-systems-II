@@ -1,5 +1,6 @@
 package MonteCarlo;
 
+import Main.RandomSeededDouble;
 import Main.State;
 
 import Actor.Agent;
@@ -10,10 +11,10 @@ public class MonteCarloTree {
 	private MonteCarloNode baseNode;
 	private final int depthThreshold;
 
-	public MonteCarloTree(State initialState, Agent[] generatedAgents, int nbrIteration, int threshold) {
+	public MonteCarloTree(State initialState, Agent[] generatedAgents, int nbrIteration, int threshold, RandomSeededDouble rand) {
 		depthThreshold = threshold;
 		baseState = initialState.clone();
-		baseNode = new MonteCarloNode(baseState, null, 0);
+		baseNode = new MonteCarloNode(baseState, null, 0, rand);
 		computeMCT(nbrIteration, generatedAgents);
 	}
 

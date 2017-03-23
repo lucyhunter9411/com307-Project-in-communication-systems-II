@@ -8,8 +8,8 @@ import MonteCarlo.MonteCarloTree;
 public class MonteCarloPredator extends Agent {
 	MonteCarloTree monteCarloTree;
 	boolean allOtherAgentsGreedy = true;
-	private final int MAX_ITERATION = 200;
-	private final int TREE_THRESHOLD = 12;
+	private final int MAX_ITERATION = 300;
+	private final int TREE_THRESHOLD = 15;
 	private BayesAgentsIdentity bayesAgentsIdentity;
 	private Agent[] generatedAgents;
 
@@ -21,10 +21,11 @@ public class MonteCarloPredator extends Agent {
 	public Direction iterate(State state) {
 		bayesAgentsIdentity.newStateInformation(state);
 		// TODO See what bayesAgentsIdentity tells us
-		// now it's 100% sure it's greedy
-		monteCarloTree = new MonteCarloTree(state, generatedAgents, MAX_ITERATION, TREE_THRESHOLD);
-		// System.out.println(monteCarloTree);
-		return monteCarloTree.getBaseNode().computeBestUTC();
+		// right now it's 100% sure it's greedy
+		monteCarloTree = new MonteCarloTree(state, generatedAgents, MAX_ITERATION, TREE_THRESHOLD, rand);
+		//System.out.println(monteCarloTree);
+		Direction resultDirection = monteCarloTree.getBaseNode().computeBestUTC();
+		return resultDirection;
 	}
 
 	@Override
