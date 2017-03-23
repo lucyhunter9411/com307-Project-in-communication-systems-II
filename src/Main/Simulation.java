@@ -108,7 +108,6 @@ public class Simulation {
 
 		// check if the prey is captured
 		if (initialState.isPreyCaptured()) {
-			System.out.println("captured in " + nbrOfIteration + " steps");
 			return true;
 		} else {
 			nbrOfIteration++;

@@ -76,9 +76,11 @@ public class Main extends JPanel {
 				for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
 					long generatedSeed = generator.nextLong();
 					s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, generatedSeed, NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
+					//the simulation is iterated until the prey is captured
 					while (!s.iterate()) {
 					}
 					currentIteration = s.getNbrOfIteration();
+					//System.out.println("captured in " + currentIteration + " steps");
 					accumulator += currentIteration;
 					// refresh the min and max iteration
 					if (currentIteration < minIteration) {
@@ -88,6 +90,10 @@ public class Main extends JPanel {
 						maxIteration = currentIteration;
 					}
 					// System.out.println("Seed is: "+generatedSeed);
+					if(i%(NBR_SIMULATION_STACK/10) == 0 && i != 0){
+						int percent = i*100/NBR_SIMULATION_STACK;
+						System.out.println("Simulation at "+percent+"% *****************************************************");
+					}
 				}
 				mapPanel.repaint();
 				double average = (double) (accumulator) / NBR_SIMULATION_STACK;
