@@ -2,30 +2,25 @@ package MonteCarlo;
 
 import Main.State;
 
-import java.util.ArrayList;
-
+import Actor.Agent;
 import Enum.Direction;
 
 public class MonteCarloTree {
 	private State baseState;
 	private MonteCarloNode baseNode;
-	private boolean allAgentGreedy;
 	private final int depthThreshold;
-	public MonteCarloTree(State initialState,int threshold, boolean allAgentGreedy) {
+	public MonteCarloTree(State initialState, Agent[] generatedAgents, int nbrIteration, int threshold) {
 		depthThreshold = threshold;
 		baseState = initialState.clone();
 		baseNode = new MonteCarloNode(baseState, null, 0);
-		this.allAgentGreedy = allAgentGreedy;
-		if (!allAgentGreedy) {
-			throw new IllegalArgumentException("not yet implemented for teammate aware predator");
-		}
+		computeMCT(nbrIteration, generatedAgents);
 	}
 
 	public MonteCarloNode getBaseNode() {
 		return baseNode;
 	}
 	
-	public void computeMCT(int nbrIteration){
+	public void computeMCT(int nbrIteration, Agent[] generatedAgents){
 		MonteCarloNode currentNode;
 		for(int i=0; i<nbrIteration; i++){
 			currentNode = baseNode;
@@ -34,7 +29,9 @@ public class MonteCarloTree {
 				//TODO
 				Direction nextDirection = currentNode.computeBestUTC();
 				//the next node is the UTC selected child of currentNode
-				currentNode = currentNode.computeChild(nextDirection, allAgentGreedy);
+				//TODO change when agent are not known 
+				setAgentsOnPosition(currentNode.getNodeState(), generatedAgents);
+				currentNode = currentNode.computeChild(generatedAgents, nextDirection);
 			}
 			//the currentNode has won
 			if(currentNode.hasWon()){
@@ -47,13 +44,14 @@ public class MonteCarloTree {
 		}
 	}
 	
-	public ArrayList<Direction> computePath(int iteration){
-		computeMCT(iteration);
-		ArrayList<Direction> path = new ArrayList<>();
-		//TODO Find the path
-		return path;
+	private void setAgentsOnPosition(State nodeState, Agent[] generatedAgents) {
+		int[][] CoordList = nodeState.getAgentsCoordinateList();
+		for(int i=0; i<generatedAgents.length; i++){
+			generatedAgents[i].setPos(CoordList[i+2][0], CoordList[i+2][1]);
+		}
+		
 	}
-	
+
 	@Override
 	public String toString(){
 		return "MontecarloTree: baseNode = "+baseNode.toString();

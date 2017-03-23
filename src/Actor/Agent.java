@@ -38,4 +38,9 @@ public abstract class Agent {
 
 	//called once for agents for precomputed algorithm on the initialState of the Simulation
 	public abstract void initiate(State initialState);
+	
+	@Override
+	public String toString(){
+		return "[Agent: index:"+agentIndex+" posX: "+posX+" posY: "+posY+"] ";
+	}
 }

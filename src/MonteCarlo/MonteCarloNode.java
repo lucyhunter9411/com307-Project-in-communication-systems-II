@@ -1,9 +1,9 @@
 package MonteCarlo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import Actor.Agent;
+import Actor.GreedyPredator;
+import Actor.Prey;
 import Enum.Direction;
 import Main.State;
 
@@ -38,7 +38,7 @@ public class MonteCarloNode {
 		}
 	}
 
-	public MonteCarloNode computeChild(Direction d, boolean areAllAgentGreedy) {
+	public MonteCarloNode computeChild(Agent[] generatedAgents, Direction d) {
 		MonteCarloNode currentChild = getChild(d);
 		// already computed
 		if (currentChild != null) {
@@ -46,7 +46,18 @@ public class MonteCarloNode {
 		} else {
 			State nextState = nodeState.clone();
 			// TODO MODIFY THE STATE TO THE NEXT NODE
-			nextState.computeNextMTCNodeState(d);
+			ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
+			ArrayList<Agent> agents = new ArrayList<Agent>();
+			directionOfAgents.add(Direction.values()[(int)(Math.random()*4)]);
+			agents.add(new Prey(nextState,1,0));
+			//value for the agent
+			directionOfAgents.add(d);
+			agents.add(new GreedyPredator(nextState ,2 ,0));
+			for (Agent a : generatedAgents) {
+				directionOfAgents.add(a.iterate(nodeState));
+				agents.add(a);
+			}
+			nextState.modifyState(directionOfAgents, agents);
 			MonteCarloNode newChild = new MonteCarloNode(nextState, this, depth + 1);
 			switch (d) {
 			case LEFT:

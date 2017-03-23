@@ -84,9 +84,13 @@ public class Simulation {
 						g.setColor(Color.RED);
 					}
 					g.fillOval(i * squareSize + 2 * r, j * squareSize + 2 * r, squareSize - 4 * r, squareSize - 4 * r);
-
 				}
 			}
+		}
+		//
+		g.setColor(Color.WHITE);
+		for(int i = 0; i < nbrPredator; i++){
+			g.drawString(" "+i+" ", initialState.getAgentsCoordinateList()[i+1][0] * squareSize + squareSize/2, initialState.getAgentsCoordinateList()[i+1][1] * squareSize + squareSize/2);
 		}
 	}
 
