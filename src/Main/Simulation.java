@@ -18,7 +18,8 @@ public class Simulation {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, int nbrGreedyPredator) {
+	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, int nbrGreedyPredator,
+			boolean useOneMtcPredator) {
 		initialState = new State(mapSizeHeight, mapSizeWidth, numberPredator);
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
@@ -36,19 +37,23 @@ public class Simulation {
 			throw new InputMismatchException("more greedy predator than the total of predator");
 		}
 		int greedyPredatorToAdd = nbrGreedyPredator;
+		boolean addedMTCPredator = false;
 		while (i <= finishedNumberAgents) {
 			pos = (int) (mapHeight * mapWidth * rand.generateDouble());
 			posX = pos % mapWidth;
 			posY = pos / mapWidth;
 			if (initialState.setAgentI(posX, posY, i)) {
 				if (i == 1) {
-					agents.add(new Prey(posX, posY, i));
+					agents.add(new Prey(posX, posY, i, rand.generateLong()));
 				} else {
-					if (greedyPredatorToAdd > 0) {
-						agents.add(new GreedyPredator(posX, posY, i));
+					if (!addedMTCPredator && useOneMtcPredator) {
+						agents.add(new MonteCarloPredator(posX, posY, i, rand.generateLong()));
+						addedMTCPredator = true;
+					} else if (greedyPredatorToAdd > 0) {
+						agents.add(new GreedyPredator(posX, posY, i, rand.generateLong()));
 						greedyPredatorToAdd--;
 					} else {
-						agents.add(new TeammateAwarePredator(posX, posY, i));
+						agents.add(new TeammateAwarePredator(posX, posY, i, rand.generateLong()));
 					}
 				}
 				i++;
@@ -79,9 +84,14 @@ public class Simulation {
 						g.setColor(Color.RED);
 					}
 					g.fillOval(i * squareSize + 2 * r, j * squareSize + 2 * r, squareSize - 4 * r, squareSize - 4 * r);
-
 				}
 			}
+		}
+		//
+		g.setColor(Color.WHITE);
+		for (int i = 0; i < nbrPredator; i++) {
+			g.drawString(" " + i + " ", initialState.getAgentsCoordinateList()[i + 1][0] * squareSize + squareSize / 2,
+					initialState.getAgentsCoordinateList()[i + 1][1] * squareSize + squareSize / 2);
 		}
 	}
 
@@ -89,76 +99,18 @@ public class Simulation {
 		// compute all the agents' next move
 		ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 		for (Agent a : agents) {
-			directionOfAgents.add(a.iterate(initialState, rand));
+			directionOfAgents.add(a.iterate(initialState));
 		}
 		// apply the agents' next move to compute the new state
-		// done in a way that all the movements are done at the same time and not sequentially, avoiding collisions
-		boolean[] didAgentMoved = new boolean[directionOfAgents.size()];
-		for (int i = 0; i < directionOfAgents.size(); i++) {
-			didAgentMoved[i] = false;
-		}
-		boolean changmentAppliedThisLoop = true;
-		while (changmentAppliedThisLoop) {
-			changmentAppliedThisLoop = false;
-			for (int i = 0; i < directionOfAgents.size(); i++) {
-				if (!didAgentMoved[i]) {
-					boolean hasAgentMoved = modifyState(initialState, agents.get(i), directionOfAgents.get(i));
-					if (hasAgentMoved) {
-						changmentAppliedThisLoop = true;
-						didAgentMoved[i] = hasAgentMoved;
-					}
-				}
-			}
-		}
+		// done in a way that all the movements are done at the same time and
+		// not sequentially, avoiding collisions
+		initialState.modifyState(directionOfAgents, agents);
+
 		// check if the prey is captured
 		if (initialState.isPreyCaptured()) {
-			System.out.println("captured in " + nbrOfIteration + " steps");
 			return true;
 		} else {
 			nbrOfIteration++;
-		}
-		return false;
-	}
-
-	/*
-	 * @param currentState: the state we are modifying
-	 * 
-	 * @param currentAgent: the actual Agent that we move the position
-	 * 
-	 * @param agentNextDirection: the direction in which the Agent will move
-	 * 
-	 * @return boolean: true if the agent moved, false if the agent was blocked
-	 * by another agent in the destination cell
-	 */
-	public boolean modifyState(State currentState, Agent currentAgent, Direction agentNextDirection) {
-		int posX = currentAgent.getPosX();
-		int posY = currentAgent.getPosY();
-		int i = currentState.getPos(posX, posY);
-		int newPosX = posX;
-		int newPosY = posY;
-		switch (agentNextDirection) {
-		case LEFT:
-			newPosX = posX - 1 + mapWidth;
-			break;
-		case TOP:
-			newPosY = posY - 1 + mapHeight;
-			break;
-		case RIGHT:
-			newPosX = posX + 1;
-			break;
-		case BOTTOM:
-			newPosY = posY + 1;
-			break;
-		default:
-			break;
-		}
-		newPosX = newPosX % mapWidth;
-		newPosY = newPosY % mapHeight;
-		// check if the new spot is free and set the new position of the agent
-		if (currentState.setAgentI(newPosX, newPosY, i)) {
-			currentState.setPos(posX, posY, 0);
-			currentAgent.setPos(newPosX, newPosY);
-			return true;
 		}
 		return false;
 	}
