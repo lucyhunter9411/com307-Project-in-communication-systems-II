@@ -23,13 +23,14 @@ public class Main extends JPanel {
 	// NBR_PREDATOR must be 4 if we use at least one team mate aware predator
 	// TODO
 	public final static int NBR_PREDATOR = 4;
-	public final static boolean USE_ONE_MTC_PREDATOR = true; 
+	public final static boolean USE_ONE_MTC_PREDATOR = true;
 	public final static int NBR_GREEDY_PREDATOR = 3;
 	public final static int NBR_SIMULATION_STACK = 1000;
 	static Simulation s;
 
 	public static void main(String[] args) {
-		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, DEFAULT_SEED, NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
+		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, DEFAULT_SEED, NBR_GREEDY_PREDATOR,
+				USE_ONE_MTC_PREDATOR);
 		JFrame f = new JFrame();
 		JPanel mapPanel = new Main();
 		JPanel controlPanel = new JPanel();
@@ -45,7 +46,10 @@ public class Main extends JPanel {
 		buttonIterate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				s.iterate();
+				if (s.iterate()) {
+					int currentIteration = s.getNbrOfIteration();
+					System.out.println("captured in " + currentIteration + " steps");
+				}
 				mapPanel.repaint();
 			}
 		});
@@ -56,7 +60,8 @@ public class Main extends JPanel {
 		buttonRestart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, Long.parseLong(textFieldSeed.getText()),NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
+				s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, Long.parseLong(textFieldSeed.getText()),
+						NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
 				mapPanel.repaint();
 			}
 		});
@@ -75,12 +80,13 @@ public class Main extends JPanel {
 				int currentIteration;
 				for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
 					long generatedSeed = generator.nextLong();
-					s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, generatedSeed, NBR_GREEDY_PREDATOR, USE_ONE_MTC_PREDATOR);
-					//the simulation is iterated until the prey is captured
+					s = new Simulation(MAP_HEIGHT, MAP_WIDTH, NBR_PREDATOR, generatedSeed, NBR_GREEDY_PREDATOR,
+							USE_ONE_MTC_PREDATOR);
+					// the simulation is iterated until the prey is captured
 					while (!s.iterate()) {
 					}
 					currentIteration = s.getNbrOfIteration();
-					//System.out.println("captured in " + currentIteration + " steps");
+					System.out.println("captured in " + currentIteration + " steps");
 					accumulator += currentIteration;
 					// refresh the min and max iteration
 					if (currentIteration < minIteration) {
@@ -90,9 +96,10 @@ public class Main extends JPanel {
 						maxIteration = currentIteration;
 					}
 					// System.out.println("Seed is: "+generatedSeed);
-					if(i%(NBR_SIMULATION_STACK/10) == 0 && i != 0){
-						int percent = i*100/NBR_SIMULATION_STACK;
-						System.out.println("Simulation at "+percent+"% *****************************************************");
+					if (i % (NBR_SIMULATION_STACK / 10) == 0 && i != 0) {
+						int percent = i * 100 / NBR_SIMULATION_STACK;
+						System.out.println(
+								"Simulation at " + percent + "% *****************************************************");
 					}
 				}
 				mapPanel.repaint();

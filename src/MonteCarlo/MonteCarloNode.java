@@ -143,15 +143,6 @@ public class MonteCarloNode {
 
 	@Override
 	public String toString() {
-		String childNodeString = "\n";
-		for (Direction d : Direction.values()) {
-			if (getChild(d) != null) {
-				childNodeString = childNodeString + "	=> D:" + d + " " + getChild(d).toString();
-			}
-		}
-		if(depth>1){
-			return "";
-		}
-		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]" + childNodeString;
+		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
 	}
 }

@@ -56,6 +56,12 @@ public class MonteCarloTree {
 
 	@Override
 	public String toString() {
-		return "MontecarloTree: baseNode = " + baseNode.toString();
+		String result = "MontecarloTree: baseNode = " + baseNode +"\n";
+		for (Direction d : Direction.values()) {
+			if (baseNode.getChild(d) != null) {
+				result = result +  "	=> D:" + d + " " + baseNode.getChild(d);
+			}
+		}
+		return result;
 	}
 }
