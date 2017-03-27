@@ -1,5 +1,6 @@
 package Actor;
 
+import Enum.AgentType;
 import Enum.Direction;
 import Main.RandomSeededDouble;
 import Main.State;
@@ -9,7 +10,7 @@ public abstract class Agent {
 	protected int posY, posX;
 	protected int agentIndex;
 	protected RandomSeededDouble rand;
-
+	protected AgentType type = AgentType.Unknow;
 	public Agent(int x, int y, int agentIndex, long randSeed) {
 		posX = x;
 		posY = y;
@@ -32,6 +33,10 @@ public abstract class Agent {
 	public void setPos(int newPosX, int newPosY) {
 		posX = newPosX;
 		posY = newPosY;
+	}
+	
+	public AgentType getType(){
+		return type;
 	}
 
 	// return {left, top, right, bottom} in function of the previous state

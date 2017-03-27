@@ -1,17 +1,20 @@
 package Actor;
 
 import Enum.Direction;
+import Enum.AgentType;
 import Main.State;
 
 public class GreedyPredator extends Agent {
-
+ 
 	public GreedyPredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
+		type = AgentType.Greedy;
 	}
 
 	public GreedyPredator(State s, int agentIndex, long randSeed) {
 		super(s.getAgentsCoordinateList()[agentIndex - 1][0], s.getAgentsCoordinateList()[agentIndex - 1][1],
 				agentIndex, randSeed);
+		type = AgentType.Greedy;
 	}
 
 	@Override

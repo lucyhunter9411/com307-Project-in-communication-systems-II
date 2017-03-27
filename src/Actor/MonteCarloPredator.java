@@ -1,5 +1,6 @@
 package Actor;
 
+import Enum.AgentType;
 import Enum.Direction;
 import Main.State;
 import MonteCarlo.BayesAgentsIdentity;
@@ -15,6 +16,7 @@ public class MonteCarloPredator extends Agent {
 
 	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
+		type = AgentType.MonteCarlo;
 	}
 
 	@Override

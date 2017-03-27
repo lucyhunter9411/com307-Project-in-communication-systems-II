@@ -1,14 +1,17 @@
 package Actor;
+import Enum.AgentType;
 import Enum.Direction;
 import Main.State;
 
 public class Prey extends Agent {
 	public Prey(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
+		type = AgentType.Prey;
 	}
 
 	public Prey(State s, int agentIndex, long randSeed) {
 		super(s.getAgentsCoordinateList()[agentIndex-1][0], s.getAgentsCoordinateList()[agentIndex-1][1], agentIndex, randSeed);
+		type = AgentType.Prey;
 	}
 
 	@Override

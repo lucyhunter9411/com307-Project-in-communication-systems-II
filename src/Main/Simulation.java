@@ -91,11 +91,11 @@ public class Simulation {
 			}
 		}
 		//
-		g.setColor(Color.WHITE);
-		for (int i = 0; i < nbrPredator; i++) {
-			int j=i+2;
-			g.drawString(" " + j + " ", initialState.getAgentsCoordinateList()[i + 1][0] * squareSize + squareSize / 2,
-					initialState.getAgentsCoordinateList()[i + 1][1] * squareSize + squareSize / 2);
+		g.setColor(Color.BLACK);
+		for (Agent a: agents) {
+			int j=a.getAgentIndex();
+			g.drawString(" " + j + " "+ a.getType(), a.getPosX() * squareSize + squareSize / 4,
+					a.getPosY() * squareSize + squareSize / 2);
 		}
 	}
 

@@ -8,14 +8,17 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import Enum.Direction;
+import Enum.AgentType;
 import Main.State;
 
 public class TeammateAwarePredator extends Agent {
 
 	private Direction attribuedPreyNeighbor;
+	public final AgentType predatorType = AgentType.TeammateAware; 
 
 	public TeammateAwarePredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
+		type = AgentType.TeammateAware;
 	}
 
 	@Override
