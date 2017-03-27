@@ -207,6 +207,7 @@ public class GreedyPredator extends Agent {
 				return testedDirection;
 			}
 		}
+		state.printMapHelper();
 		throw new AssertionError("We checked that the prey has at least a free neighbor");
 	}
 

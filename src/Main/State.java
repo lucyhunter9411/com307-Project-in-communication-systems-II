@@ -143,7 +143,8 @@ public class State {
 		boolean changmentAppliedThisLoop = true;
 		while (changmentAppliedThisLoop) {
 			changmentAppliedThisLoop = false;
-			for (int i = 0; i < directionOfAgents.size(); i++) {
+			//for (int i = directionOfAgents.size()-1; i >=0; i--) {
+			for(int i = 0; i<directionOfAgents.size();i++){
 				if (!didAgentMoved[i]) {
 					boolean hasAgentMoved = modifyStateForAgent(agents.get(i), directionOfAgents.get(i));
 					if (hasAgentMoved) {

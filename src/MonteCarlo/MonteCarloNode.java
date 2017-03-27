@@ -54,7 +54,6 @@ public class MonteCarloNode {
 			// compute a random object which the seed is the previous state
 			// so the prey will do the same action for the 4 child of the same
 			// parent
-
 			directionOfAgents.add(Direction
 					.values()[(int) (new RandomSeededDouble(nodeState.toLongApproximation()).generateDouble() * 4)]);
 			agents.add(new Prey(nextState, 1, 0));

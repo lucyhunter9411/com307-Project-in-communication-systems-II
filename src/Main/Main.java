@@ -13,6 +13,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -38,6 +39,8 @@ public class Main extends JPanel {
 	static Simulation s;
 	// label info of total of predator since it's not really clear
 	static Label labelNbrPredator = new Label("Total number of predator: 4");
+	static JProgressBar progressBar = new JProgressBar(0,100);
+	static Label resultLabel = new Label("##################################################################");
 
 	public static void main(String[] args) {
 		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, nbrTeamPredator, DEFAULT_SEED, nbrGreedyPredator, useOneMtcPredator);
@@ -130,63 +133,74 @@ public class Main extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				long initialSeed = Long.parseLong(textFieldSeed.getText());
 				Random generator = new Random(initialSeed);
-				long accumulator = 0;
-				int minIteration = Integer.MAX_VALUE;
-				int maxIteration = 0;
-				int currentIteration;
-				for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
-					long generatedSeed = generator.nextLong();
-					s = new Simulation(MAP_HEIGHT, MAP_WIDTH, nbrTeamPredator, generatedSeed, nbrGreedyPredator,
-							useOneMtcPredator);
-					// the simulation is iterated until the prey is captured
-					while (!s.iterate()) {
-					}
-					currentIteration = s.getNbrOfIteration();
-					System.out.println("captured in " + currentIteration + " steps");
-					accumulator += currentIteration;
-					// refresh the min and max iteration
-					if (currentIteration < minIteration) {
-						minIteration = currentIteration;
-					}
-					if (currentIteration > maxIteration) {
-						maxIteration = currentIteration;
-					}
-					// System.out.println("Seed is: "+generatedSeed);
-					if (i % (NBR_SIMULATION_STACK / 10) == 0 && i != 0) {
-						int percent = i * 100 / NBR_SIMULATION_STACK;
-						System.out.println(
-								"Simulation at " + percent + "% *****************************************************");
-					}
-				}
-				mapPanel.repaint();
-				double average = (double) (accumulator) / NBR_SIMULATION_STACK;
-				System.out.println(
-						"Finished the " + NBR_SIMULATION_STACK + " simulations; average is " + average + " steps.");
-				System.out.println("Minimum: " + minIteration + " Maximum: " + maxIteration);
+				Thread backgroundThread = new Thread(){
+				    public void run(){
+				    	long accumulator = 0;
+						int minIteration = Integer.MAX_VALUE;
+						int maxIteration = 0;
+						int currentIteration;
+				    	for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
+							long generatedSeed = generator.nextLong();
+							s = new Simulation(MAP_HEIGHT, MAP_WIDTH, nbrTeamPredator, generatedSeed, nbrGreedyPredator,
+									useOneMtcPredator);
+							// the simulation is iterated until the prey is captured
+							while (!s.iterate()) {
+							}
+							currentIteration = s.getNbrOfIteration();
+							System.out.println("captured in " + currentIteration + " steps");
+							accumulator += currentIteration;
+							// refresh the min and max iteration
+							if (currentIteration < minIteration) {
+								minIteration = currentIteration;
+							}
+							if (currentIteration > maxIteration) {
+								maxIteration = currentIteration;
+							}
+							// System.out.println("Seed is: "+generatedSeed);
+							if (i % (NBR_SIMULATION_STACK / 100) == 0 && i != 0) {
+								int percent = 1 + i * 100 / NBR_SIMULATION_STACK;
+								progressBar.setValue(percent);
+								controlPanel.repaint();
+							}
+						}
+						double average = (double) (accumulator) / NBR_SIMULATION_STACK;
+						resultLabel.setText("Finished the " + NBR_SIMULATION_STACK + " simulations; average is " + average + " steps."+"\n"+"Minimum: " + minIteration + " Maximum: " + maxIteration);
+						mapPanel.repaint();
+				    }
+				 };
 
+				 backgroundThread.start();
 			}
 		});
-		JPanel firstLine = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		firstLine.add(new Label("Seed:"));
-		firstLine.add(textFieldSeed);
-		firstLine.add(new Label("Use one MTC Predator:"));
-		firstLine.add(checkButtonMTC);
-		controlPanel.add(firstLine);
+		
+		//all the Cells inside the control panel
+		JPanel firstCell = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		firstCell.add(new Label("Seed:"));
+		firstCell.add(textFieldSeed);
+		firstCell.add(new Label("Use one MTC Predator:"));
+		firstCell.add(checkButtonMTC);
+		controlPanel.add(firstCell);
 
-		JPanel secondLine = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		secondLine.add(new Label("Number of greedy agent:"));
-		secondLine.add(spinnerNbrGreedy);
-		secondLine.add(new Label("Number of teammate aware agent:"));
-		secondLine.add(spinnerNbrTeam);
-		secondLine.add(labelNbrPredator);
-		controlPanel.add(secondLine);
+		JPanel secondCell = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		secondCell.add(new Label("Number of greedy agent:"));
+		secondCell.add(spinnerNbrGreedy);
+		secondCell.add(new Label("Number of teammate aware agent:"));
+		secondCell.add(spinnerNbrTeam);
+		secondCell.add(labelNbrPredator);
+		controlPanel.add(secondCell);
 
-		JPanel thirdLine = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		thirdLine.add(buttonIterate);
-		thirdLine.add(buttonRestart);
-		thirdLine.add(buttonComputeAverage);
-		controlPanel.add(thirdLine);
-
+		JPanel thirdCell = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		thirdCell.add(buttonIterate);
+		thirdCell.add(buttonRestart);
+		controlPanel.add(thirdCell);
+		
+		JPanel forthCell = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		forthCell.add(buttonComputeAverage);
+		progressBar.setStringPainted(true);
+		forthCell.add(progressBar);
+		forthCell.add(resultLabel);
+		controlPanel.add(forthCell);
+		
 		// add all the panel in the main JFrame
 		mainPanel.add(mapPanel, BorderLayout.PAGE_START);
 		mainPanel.add(controlPanel, BorderLayout.PAGE_END);
