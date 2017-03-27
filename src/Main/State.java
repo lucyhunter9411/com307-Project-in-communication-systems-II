@@ -261,17 +261,17 @@ public class State {
 	/*
 	 * return a long representing the state in fuction of its agents coordinate
 	 * one coordinate per decimal of the long
+	 * if value>9 there could be collision but we don't care for its usage,
+	 * it's currently used just for the MTC generated prey to have the same move if its node parent are equivalent
 	 */
-	public long toLong() {
+	public long toLongApproximation() {
 		long result = 0;
 		int coef = 1;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < nbrAgents; j++) {
 				int value = agentsCoordinate[j][i];
-				if(value>9){
-					throw new AssertionError("works only for map of size max 10x10");
-				}
-				result += value*Math.pow(10, coef);
+				long nextEncodedValue = Math.multiplyExact(value, (long)Math.pow(10, coef));
+				result =Math.addExact(result, nextEncodedValue);
 				coef++;
 			}
 		}
