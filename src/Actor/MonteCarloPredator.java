@@ -23,9 +23,9 @@ public class MonteCarloPredator extends Agent {
 		// TODO See what bayesAgentsIdentity tells us
 		// right now it's 100% sure it's greedy
 		monteCarloTree = new MonteCarloTree(state, generatedAgents, MAX_ITERATION, TREE_THRESHOLD, rand);
-		System.out.println(monteCarloTree);
+		// System.out.println(monteCarloTree);
 		Direction resultDirection = monteCarloTree.getBaseNode().computeBestDirection();
-		monteCarloTree.getBaseNode().getChild(resultDirection).getNodeState().printMapHelper();
+		// monteCarloTree.getBaseNode().getChild(resultDirection).getNodeState().printMapHelper();
 		return resultDirection;
 	}
 

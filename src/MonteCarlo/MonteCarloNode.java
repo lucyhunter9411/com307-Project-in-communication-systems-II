@@ -17,6 +17,7 @@ public class MonteCarloNode {
 	private double pointsEarned = 0;
 	private int nodeTry = 0;
 	private RandomSeededDouble rand;
+
 	public MonteCarloNode(State state, MonteCarloNode parentNode, int depth, RandomSeededDouble rand) {
 		nodeState = state.clone();
 		this.depth = depth;
@@ -50,10 +51,12 @@ public class MonteCarloNode {
 			// TODO MODIFY THE STATE TO THE NEXT NODE
 			ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 			ArrayList<Agent> agents = new ArrayList<Agent>();
-			//compute a random object which the seed is the previous state
-			//so the prey will do the same action for the 4 child of the same parent
-			
-			directionOfAgents.add(Direction.values()[(int) (new RandomSeededDouble(nodeState.toLongApproximation()).generateDouble() * 4)]);
+			// compute a random object which the seed is the previous state
+			// so the prey will do the same action for the 4 child of the same
+			// parent
+
+			directionOfAgents.add(Direction
+					.values()[(int) (new RandomSeededDouble(nodeState.toLongApproximation()).generateDouble() * 4)]);
 			agents.add(new Prey(nextState, 1, 0));
 			// value for the MTC agent
 			directionOfAgents.add(d);
@@ -123,8 +126,8 @@ public class MonteCarloNode {
 			if (t == 0) {
 				t = 1;
 			}
-			double wi=1;
-			double ni=1;
+			double wi = 1;
+			double ni = 1;
 			if (getChild(d) != null) {
 				wi = getChild(d).pointsEarned;
 				ni = getChild(d).nodeTry;
@@ -150,13 +153,13 @@ public class MonteCarloNode {
 		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
 	}
 
-	//return the direction with the best expected value
+	// return the direction with the best expected value
 	public Direction computeBestDirection() {
 		double maxExpValue = -Double.MAX_VALUE;
 		ArrayList<Direction> bestDirection = new ArrayList<>();
 		for (Direction d : Direction.values()) {
-			double wi=1;
-			double ni=1;
+			double wi = 1;
+			double ni = 1;
 			if (getChild(d) != null) {
 				wi = getChild(d).pointsEarned;
 				ni = getChild(d).nodeTry;

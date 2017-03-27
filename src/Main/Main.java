@@ -36,49 +36,47 @@ public class Main extends JPanel {
 	private static int nbrGreedyPredator = 3;
 	public final static int NBR_SIMULATION_STACK = 1000;
 	static Simulation s;
-	 //label info of total of predator since it's not really clear
+	// label info of total of predator since it's not really clear
 	static Label labelNbrPredator = new Label("Total number of predator: 4");
 
 	public static void main(String[] args) {
 		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, nbrTeamPredator, DEFAULT_SEED, nbrGreedyPredator, useOneMtcPredator);
 		JFrame f = new JFrame();
 		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setPreferredSize(new Dimension(1000,1300));
+		mainPanel.setPreferredSize(new Dimension(1000, 1300));
 		JPanel mapPanel = new Main();
 		JPanel controlPanel = new JPanel(new GridLayout(2, 2));
 		mapPanel.setPreferredSize(new Dimension(1000, 1000));
 		controlPanel.setPreferredSize(new Dimension(1000, 300));
 
-		
-		
 		// initialize the buttons in the control panel
 		JTextField textFieldSeed = new JTextField(DEFAULT_SEED + "", 12);
 		JSpinner spinnerNbrGreedy = new JSpinner(new SpinnerNumberModel(new Integer(3), // value
 				new Integer(0), // min
 				new Integer(10), // max
 				new Integer(1) // step
-				));
+		));
 		spinnerNbrGreedy.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				JSpinner spinner = (JSpinner) e.getSource();
-				int currentValue  =(Integer)spinner.getValue();
+				int currentValue = (Integer) spinner.getValue();
 				nbrGreedyPredator = currentValue;
 				updatePredatorLabel();
 			}
 		});
-		
+
 		// spinner to define the number of teammate aware predator
 		JSpinner spinnerNbrTeam = new JSpinner(new SpinnerNumberModel(new Integer(0), // value
 				new Integer(0), // min
 				new Integer(10), // max
 				new Integer(1) // step
-				));
+		));
 		spinnerNbrTeam.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				JSpinner spinner = (JSpinner) e.getSource();
-				nbrTeamPredator = (Integer)spinner.getValue();
+				nbrTeamPredator = (Integer) spinner.getValue();
 				updatePredatorLabel();
 			}
 		});
@@ -109,7 +107,7 @@ public class Main extends JPanel {
 				mapPanel.repaint();
 			}
 		});
-		
+
 		// button to restart in function of the param of the inputs
 		JButton buttonRestart = new JButton();
 		buttonRestart.setVisible(true);
@@ -190,8 +188,8 @@ public class Main extends JPanel {
 		controlPanel.add(thirdLine);
 
 		// add all the panel in the main JFrame
-		mainPanel.add(mapPanel,BorderLayout.PAGE_START);
-		mainPanel.add(controlPanel,BorderLayout.PAGE_END);
+		mainPanel.add(mapPanel, BorderLayout.PAGE_START);
+		mainPanel.add(controlPanel, BorderLayout.PAGE_END);
 		f.add(mainPanel);
 		f.pack();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -199,14 +197,14 @@ public class Main extends JPanel {
 		f.setVisible(true);
 	}
 
-	public static void updatePredatorLabel(){
+	public static void updatePredatorLabel() {
 		int nbrPredator = nbrTeamPredator + nbrGreedyPredator;
-		if(useOneMtcPredator){
+		if (useOneMtcPredator) {
 			nbrPredator++;
 		}
-		labelNbrPredator.setText("Total number of predator: "+nbrPredator);
+		labelNbrPredator.setText("Total number of predator: " + nbrPredator);
 	}
-	
+
 	public void update(Graphics g) {
 		paint(g);
 	}

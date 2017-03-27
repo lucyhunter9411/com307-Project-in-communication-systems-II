@@ -11,7 +11,8 @@ public class MonteCarloTree {
 	private MonteCarloNode baseNode;
 	private final int depthThreshold;
 
-	public MonteCarloTree(State initialState, Agent[] generatedAgents, int nbrIteration, int threshold, RandomSeededDouble rand) {
+	public MonteCarloTree(State initialState, Agent[] generatedAgents, int nbrIteration, int threshold,
+			RandomSeededDouble rand) {
 		depthThreshold = threshold;
 		baseState = initialState.clone();
 		baseNode = new MonteCarloNode(baseState, null, 0, rand);
@@ -27,7 +28,7 @@ public class MonteCarloTree {
 		for (int i = 0; i < nbrIteration; i++) {
 			currentNode = baseNode;
 			// the currentNode didn't win or lose
-			while (!((currentNode.hasWon()&&currentNode.getDepth()!=0) || currentNode.hasLost(depthThreshold))) {
+			while (!((currentNode.hasWon() && currentNode.getDepth() != 0) || currentNode.hasLost(depthThreshold))) {
 				// TODO
 				Direction nextDirection = currentNode.computeBestUTC();
 				// the next node is the UTC selected child of currentNode
@@ -56,10 +57,10 @@ public class MonteCarloTree {
 
 	@Override
 	public String toString() {
-		String result = "MontecarloTree: baseNode = " + baseNode +"\n";
+		String result = "MontecarloTree: baseNode = " + baseNode + "\n";
 		for (Direction d : Direction.values()) {
 			if (baseNode.getChild(d) != null) {
-				result = result +  "	=> D:" + d + " " + baseNode.getChild(d);
+				result = result + "	=> D:" + d + " " + baseNode.getChild(d);
 			}
 		}
 		return result;
