@@ -50,10 +50,14 @@ public class MonteCarloNode {
 			// TODO MODIFY THE STATE TO THE NEXT NODE
 			ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 			ArrayList<Agent> agents = new ArrayList<Agent>();
-			directionOfAgents.add(Direction.values()[(int) (rand.generateDouble() * 4)]);
+			//compute a random object which the seed is the previous state
+			//so the prey will do the same action for the 4 child of the same parent
+			
+			directionOfAgents.add(Direction.values()[(int) (new RandomSeededDouble(nodeState.toLong()).generateDouble() * 4)]);
 			agents.add(new Prey(nextState, 1, 0));
-			// value for the agent
+			// value for the MTC agent
 			directionOfAgents.add(d);
+			// we add a useless agent
 			agents.add(new GreedyPredator(nextState, 2, 0));
 			for (Agent a : generatedAgents) {
 				directionOfAgents.add(a.iterate(nodeState));
@@ -144,5 +148,30 @@ public class MonteCarloNode {
 	@Override
 	public String toString() {
 		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
+	}
+
+	//return the direction with the best expected value
+	public Direction computeBestDirection() {
+		double maxExpValue = -Double.MAX_VALUE;
+		ArrayList<Direction> bestDirection = new ArrayList<>();
+		for (Direction d : Direction.values()) {
+			double wi=1;
+			double ni=1;
+			if (getChild(d) != null) {
+				wi = getChild(d).pointsEarned;
+				ni = getChild(d).nodeTry;
+			}
+			double ExpValue = wi / ni;
+			if (ExpValue > maxExpValue) {
+				bestDirection.clear();
+				bestDirection.add(d);
+				maxExpValue = ExpValue;
+			} else if (ExpValue == maxExpValue) {
+				bestDirection.add(d);
+			}
+		}
+		// return the direction with the bigger Expected Value
+		int index = (int) (rand.generateDouble() * bestDirection.size());
+		return bestDirection.get(index);
 	}
 }
