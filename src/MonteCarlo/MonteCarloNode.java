@@ -174,4 +174,8 @@ public class MonteCarloNode {
 		int index = (int) (rand.generateDouble() * bestDirection.size());
 		return bestDirection.get(index);
 	}
+
+	public int getDepth() {
+		return depth;
+	}
 }

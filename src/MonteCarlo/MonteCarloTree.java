@@ -27,7 +27,7 @@ public class MonteCarloTree {
 		for (int i = 0; i < nbrIteration; i++) {
 			currentNode = baseNode;
 			// the currentNode didn't win or lose
-			while (!(currentNode.hasWon() || currentNode.hasLost(depthThreshold))) {
+			while (!((currentNode.hasWon()&&currentNode.getDepth()!=0) || currentNode.hasLost(depthThreshold))) {
 				// TODO
 				Direction nextDirection = currentNode.computeBestUTC();
 				// the next node is the UTC selected child of currentNode

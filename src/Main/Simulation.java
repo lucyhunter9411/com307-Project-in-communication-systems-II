@@ -18,12 +18,15 @@ public class Simulation {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, int numberPredator, long seed, int nbrGreedyPredator,
+	public Simulation(int mapSizeHeight, int mapSizeWidth, int nbrTeamPredator, long seed, int nbrGreedyPredator,
 			boolean useOneMtcPredator) {
-		initialState = new State(mapSizeHeight, mapSizeWidth, numberPredator);
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
-		this.nbrPredator = numberPredator;
+		this.nbrPredator = nbrTeamPredator+nbrGreedyPredator;
+		if(useOneMtcPredator){
+			nbrPredator++;
+		}
+		initialState = new State(mapSizeHeight, mapSizeWidth, nbrPredator);
 		rand = new RandomSeededDouble(seed);
 
 		// initialize the agents at random position
@@ -33,7 +36,7 @@ public class Simulation {
 		if (mapSizeHeight * mapSizeWidth < finishedNumberAgents) {
 			throw new AssertionError("more agents than cells");
 		}
-		if (nbrGreedyPredator > numberPredator) {
+		if (nbrGreedyPredator > nbrPredator) {
 			throw new InputMismatchException("more greedy predator than the total of predator");
 		}
 		int greedyPredatorToAdd = nbrGreedyPredator;
