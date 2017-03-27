@@ -13,3 +13,4 @@
   * 1 MTC and 3 Greedy: 15.491 average step
   * 4 Greedy: 10.965 average step
   * 4 Teammate aware: 8.708 average step
+  * 1 MTC and 3 Teammate aware (MTC thinking they are all Greedy) 23.96 average step
