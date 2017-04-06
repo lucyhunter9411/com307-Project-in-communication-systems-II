@@ -1,4 +1,4 @@
 package Enum;
 public enum AgentType {
-	Prey, Greedy, TeammateAware, Unknow, MonteCarlo;
+	Prey, MonteCarlo, Greedy, TeammateAware, Unknow;
 }

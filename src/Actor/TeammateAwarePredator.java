@@ -13,12 +13,20 @@ import Main.State;
 
 public class TeammateAwarePredator extends Agent {
 
-	private Direction attribuedPreyNeighbor;
+	private Direction attributedPreyNeighbor;
 	public final AgentType predatorType = AgentType.TeammateAware; 
 
 	public TeammateAwarePredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
 		type = AgentType.TeammateAware;
+	}
+
+	//this contructor need to use the initial state to compute the attributedPreyneighbor
+	public TeammateAwarePredator(State s, int agentIndex, long randSeed) {
+		super(s.getAgentsCoordinateList()[agentIndex - 1][0], s.getAgentsCoordinateList()[agentIndex - 1][1],
+				agentIndex, randSeed);
+		type = AgentType.TeammateAware;
+		initiate(s);
 	}
 
 	@Override
@@ -50,7 +58,7 @@ public class TeammateAwarePredator extends Agent {
 		// "+directionPerPredator[3]+" ");
 
 		assert (agentIndex > 1 && agentIndex <= 5);
-		attribuedPreyNeighbor = directionPerPredator[agentIndex - 2];
+		attributedPreyNeighbor = directionPerPredator[agentIndex - 2];
 	}
 
 	@Override
@@ -67,7 +75,7 @@ public class TeammateAwarePredator extends Agent {
 		int destinationY = preyY;
 		// compute the destination coordinate
 		// check if the predator is already on the destination
-		switch (attribuedPreyNeighbor) {
+		switch (attributedPreyNeighbor) {
 		case LEFT:
 			destinationX = (preyX - 1 + width) % width;
 			if (posX == destinationX && posY == destinationY) {

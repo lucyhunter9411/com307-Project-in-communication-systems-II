@@ -140,11 +140,14 @@ public class State {
 		for (int i = 0; i < directionOfAgents.size(); i++) {
 			didAgentMoved[i] = false;
 		}
+//		long seed = System.nanoTime();
+//		Collections.shuffle(directionOfAgents, new Random(seed));
+//		Collections.shuffle(agents, new Random(seed));
 		boolean changmentAppliedThisLoop = true;
 		while (changmentAppliedThisLoop) {
 			changmentAppliedThisLoop = false;
-			//for (int i = directionOfAgents.size()-1; i >=0; i--) {
-			for(int i = 0; i<directionOfAgents.size();i++){
+			for (int i = directionOfAgents.size()-1; i >=0; i--) {
+			//for(int i = 0; i<directionOfAgents.size();i++){
 				if (!didAgentMoved[i]) {
 					boolean hasAgentMoved = modifyStateForAgent(agents.get(i), directionOfAgents.get(i));
 					if (hasAgentMoved) {

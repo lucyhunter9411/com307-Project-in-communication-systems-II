@@ -42,12 +42,12 @@ public abstract class Agent {
 	// return {left, top, right, bottom} in function of the previous state
 	public abstract Direction iterate(State state);
 
-	// called once for agents for precomputed algorithm on the initialState of
+	// called once for agents for pre-computed algorithm on the initialState of
 	// the Simulation
 	public abstract void initiate(State initialState);
 
 	@Override
 	public String toString() {
-		return "[Agent: index:" + agentIndex + " posX: " + posX + " posY: " + posY + "] ";
+		return "[Agent: "+type+" index:" + agentIndex + " posX: " + posX + " posY: " + posY + "] ";
 	}
 }

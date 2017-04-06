@@ -13,6 +13,7 @@ public class MonteCarloPredator extends Agent {
 	private final int TREE_THRESHOLD = 10;
 	private BayesAgentsIdentity bayesAgentsIdentity;
 	private Agent[] generatedAgents;
+	private Direction previousComputedDirection;
 
 	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
@@ -21,14 +22,14 @@ public class MonteCarloPredator extends Agent {
 
 	@Override
 	public Direction iterate(State state) {
-		bayesAgentsIdentity.newStateInformation(state);
+		bayesAgentsIdentity.newStateInformation(state.clone(),previousComputedDirection);
 		// TODO See what bayesAgentsIdentity tells us
 		// right now it's 100% sure it's greedy
-		monteCarloTree = new MonteCarloTree(state, generatedAgents, MAX_ITERATION, TREE_THRESHOLD, rand);
+		monteCarloTree = new MonteCarloTree(state.clone(), generatedAgents, MAX_ITERATION, TREE_THRESHOLD, rand);
 		//System.out.println(monteCarloTree);
-		Direction resultDirection = monteCarloTree.getBaseNode().computeBestDirection();
+		previousComputedDirection = monteCarloTree.getBaseNode().computeBestDirection();
 		//monteCarloTree.getBaseNode().getChild(resultDirection).getNodeState().printMapHelper();
-		return resultDirection;
+		return previousComputedDirection;
 	}
 
 	@Override
