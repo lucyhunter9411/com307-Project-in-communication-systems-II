@@ -12,9 +12,9 @@ public class MonteCarloPredator extends Agent {
 	private final int MAX_ITERATION = 2000;
 	private final int TREE_THRESHOLD = 10;
 	private BayesAgentsIdentity bayesAgentsIdentity;
-	private Agent[] generatedAgents;
 	private Direction previousComputedDirection;
-
+	private Agent[] agentsList;
+	
 	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
 		type = AgentType.MonteCarlo;
@@ -24,30 +24,30 @@ public class MonteCarloPredator extends Agent {
 	public Direction iterate(State state) {
 		bayesAgentsIdentity.newStateInformation(state.clone(),previousComputedDirection);
 		// TODO See what bayesAgentsIdentity tells us
-		// right now it's 100% sure it's greedy
-		monteCarloTree = new MonteCarloTree(state.clone(), generatedAgents, MAX_ITERATION, TREE_THRESHOLD, rand);
+		//state.printMapHelper();
+		//System.out.println();
+		monteCarloTree = new MonteCarloTree(state.clone(), MAX_ITERATION, TREE_THRESHOLD, rand, agentsList);
 		//System.out.println(monteCarloTree);
 		previousComputedDirection = monteCarloTree.getBaseNode().computeBestDirection();
-		//monteCarloTree.getBaseNode().getChild(resultDirection).getNodeState().printMapHelper();
+		//monteCarloTree.getBaseNode().getChild(previousComputedDirection).getChild(7).getNodeState().printMapHelper();
+		//System.out.println();
 		return previousComputedDirection;
 	}
 
 	@Override
 	public void initiate(State initialState) {
 		bayesAgentsIdentity = new BayesAgentsIdentity(initialState);
-		generatedAgents = createPredator(initialState, initialState.getNbrAgents() - 2);
+		initiateAgentsList(initialState);
 	}
-
-	private Agent[] createPredator(State state, int nbrOtherPredator) {
-		if (nbrOtherPredator < 0) {
-			throw new IllegalArgumentException(
-					"must be a positive value (i.e: there must be at least a prey and this MCPredator, so should be at least 0)");
+	
+	private void initiateAgentsList(State initialState) {
+		agentsList = new Agent[6];
+		for (int i = 0; i < 3; i++) {
+			agentsList[i] = (new GreedyPredator(initialState, i + 3, rand.generateLong()));
 		}
-		Agent[] generatedPredatorList = new Agent[nbrOtherPredator];
-		for (int i = 0; i < nbrOtherPredator; i++) {
-			generatedPredatorList[i] = (new GreedyPredator(state, i + 3, rand.generateLong()));
+		for (int i = 0; i < 3; i++) {
+			//TODO need to initiate to the REAL baseState, not the baseState of each iteration
+			agentsList[i+3] = (new TeammateAwarePredator(initialState, i + 3, rand.generateLong()));
 		}
-		return generatedPredatorList;
 	}
-
 }

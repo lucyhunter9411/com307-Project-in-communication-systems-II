@@ -117,14 +117,14 @@ public class BayesAgentsIdentity {
 			// System.out.println(valG[0]+" "+valG[1]+" "+valG[2]);
 			// System.out.println(valT[0]+" "+valT[1]+" "+valT[2]);
 
-			// compute the next probability using Bayes and the Polynomial
-			// Weights Aglorithm
+			// compute the next probability in function of the teammates actions using Bayesian and the Polynomial
+			// Weights Algorithm
 			for (int i = 0; i < nbrPredator - 1; i++) {
 				double pActionKGreedy = 2.0 * valG[i] / (tot);
 				double pActionKTeam = 2.0 * valT[i] / (tot);
 				double pGreedy = probabilityModelOfAction[i][0];
 				double pTeam = probabilityModelOfAction[i][1];
-				double pAction = pActionKGreedy * pGreedy + pActionKTeam * pTeam;
+				//double pAction = pActionKGreedy * pGreedy + pActionKTeam * pTeam;
 				double lossGreedy = 1 - pActionKGreedy;
 				double lossTeam = 1 - pActionKTeam;
 				probabilityModelOfAction[i][0] = (1 - NAMBLA * lossGreedy) * pGreedy;
@@ -136,7 +136,7 @@ public class BayesAgentsIdentity {
 				probabilityModelOfAction[i][1] /= pTot;
 			}
 
-			printTable();
+			//printTable();
 			previousState = currentState;
 		}
 	}

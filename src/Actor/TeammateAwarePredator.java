@@ -13,7 +13,7 @@ import Main.State;
 
 public class TeammateAwarePredator extends Agent {
 
-	private Direction attributedPreyNeighbor;
+	public Direction attributedPreyNeighbor;
 	public final AgentType predatorType = AgentType.TeammateAware; 
 
 	public TeammateAwarePredator(int x, int y, int agentIndex, long randSeed) {

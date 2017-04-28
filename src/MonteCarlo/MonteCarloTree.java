@@ -4,47 +4,87 @@ import Main.RandomSeededDouble;
 import Main.State;
 
 import Actor.Agent;
+import Actor.GreedyPredator;
+import Actor.TeammateAwarePredator;
 import Enum.Direction;
 
 public class MonteCarloTree {
 	private State baseState;
-	private MonteCarloNode baseNode;
+	private MonteCarloNodeS baseNode;
 	private final int depthThreshold;
+	private Agent[] agentsList;
+	private RandomSeededDouble rand;
 
-	public MonteCarloTree(State initialState, Agent[] generatedAgents, int nbrIteration, int threshold,
-			RandomSeededDouble rand) {
+	public MonteCarloTree(State initialState, int nbrIteration, int threshold, RandomSeededDouble rand,
+			Agent[] agentsList) {
+		this.rand = rand;
 		depthThreshold = threshold;
 		baseState = initialState.clone();
-		baseNode = new MonteCarloNode(baseState, null, 0, rand);
-		computeMCT(nbrIteration, generatedAgents);
+		baseNode = new MonteCarloNodeS(baseState, null, 0, rand);
+		this.agentsList = agentsList;
+		computeMCT(nbrIteration);
 	}
 
-	public MonteCarloNode getBaseNode() {
+	public MonteCarloNodeS getBaseNode() {
 		return baseNode;
 	}
 
-	public void computeMCT(int nbrIteration, Agent[] generatedAgents) {
-		MonteCarloNode currentNode;
+	public void computeMCT(int nbrIteration) {
+		MonteCarloNodeS currentStateNode;
 		for (int i = 0; i < nbrIteration; i++) {
-			currentNode = baseNode;
+			currentStateNode = baseNode;
 			// the currentNode didn't win or lose
-			while (!((currentNode.hasWon() && currentNode.getDepth() != 0) || currentNode.hasLost(depthThreshold))) {
+			while (!((currentStateNode.hasWon() && currentStateNode.getDepth() != 0)
+					|| currentStateNode.hasLost(depthThreshold))) {
 				// TODO
-				Direction nextDirection = currentNode.computeBestUTC();
 				// the next node is the UTC selected child of currentNode
-				// TODO change when agent are not known
-				setAgentsOnPosition(currentNode.getNodeState(), generatedAgents);
-				currentNode = currentNode.computeChild(generatedAgents, nextDirection);
+				Direction nextDirection = currentStateNode.computeBestUTC();
+				// generate the next NodeG
+				MonteCarloNodeG childNodeG = currentStateNode.computeChild(nextDirection);
+				// choose the model in function of our probability table
+				int childIndex = childNodeG.computeBestUTC();
+				// set the good agents in function of our model and put them on
+				// the right position
+				Agent[] generatedAgents = setModelAgents(childIndex);
+				setAgentsOnPosition(currentStateNode.getNodeState(), generatedAgents);
+				// if(currentStateNode.getDepth()==0 && i ==0){
+				// System.out.println(generatedAgents[0]+""+((TeammateAwarePredator)generatedAgents[0]).attributedPreyNeighbor+"
+				// "+generatedAgents[1]+""+((TeammateAwarePredator)generatedAgents[1]).attributedPreyNeighbor+"
+				// "+generatedAgents[2]+""+((TeammateAwarePredator)generatedAgents[2]).attributedPreyNeighbor);}
+				// generate the next stateNode
+				currentStateNode = childNodeG.computeChild(generatedAgents, childIndex);
 			}
 			// the currentNode has won
-			if (currentNode.hasWon()) {
-				currentNode.propagateWin();
+			if (currentStateNode.hasWon()) {
+				currentStateNode.propagateWin();
 			}
 			// the currentNode has lost
 			else {
-				currentNode.propagateLose();
+				currentStateNode.propagateLose();
 			}
 		}
+	}
+
+	private Agent[] setModelAgents(int childIndex) {
+		Agent[] modelAgentsList = new Agent[3];
+		if (childIndex % 2 == 0) {
+			modelAgentsList[0] = agentsList[0];
+		} else {
+			modelAgentsList[0] = agentsList[3];
+		}
+		childIndex /= 2;
+		if (childIndex % 2 == 0) {
+			modelAgentsList[1] = agentsList[1];
+		} else {
+			modelAgentsList[1] = agentsList[4];
+		}
+		childIndex /= 2;
+		if (childIndex % 2 == 0) {
+			modelAgentsList[2] = agentsList[2];
+		} else {
+			modelAgentsList[2] = agentsList[5];
+		}
+		return modelAgentsList;
 	}
 
 	private void setAgentsOnPosition(State nodeState, Agent[] generatedAgents) {

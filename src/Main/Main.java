@@ -56,7 +56,7 @@ public class Main extends JPanel {
 		JTextField textFieldSeed = new JTextField(DEFAULT_SEED + "", 12);
 		JSpinner spinnerNbrGreedy = new JSpinner(new SpinnerNumberModel(new Integer(3), // value
 				new Integer(0), // min
-				new Integer(10), // max
+				new Integer(4), // max
 				new Integer(1) // step
 		));
 		spinnerNbrGreedy.addChangeListener(new ChangeListener() {
@@ -72,7 +72,7 @@ public class Main extends JPanel {
 		// spinner to define the number of teammate aware predator
 		JSpinner spinnerNbrTeam = new JSpinner(new SpinnerNumberModel(new Integer(0), // value
 				new Integer(0), // min
-				new Integer(10), // max
+				new Integer(4), // max
 				new Integer(1) // step
 		));
 		spinnerNbrTeam.addChangeListener(new ChangeListener() {
