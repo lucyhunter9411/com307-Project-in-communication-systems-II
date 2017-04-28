@@ -8,18 +8,17 @@ import Enum.Direction;
 import Main.RandomSeededDouble;
 import Main.State;
 
-public class MonteCarloNodeG {
+public class MonteCarloNodeG extends MonteCarloNode{
 
 	private MonteCarloNodeS parentNode;
 	private final int depth;
 	private final int modelPossibility = 8;
 	private MonteCarloNodeS[] childsNode = new MonteCarloNodeS[modelPossibility];
-	double pointsEarned = 0;
-	int nodeTry = 0;
 	private RandomSeededDouble rand;
 	private Direction parentDirection;
 	
 	public MonteCarloNodeG(MonteCarloNodeS monteCarloNodeS,Direction parentDirection, int depth, RandomSeededDouble rand) {
+		super(monteCarloNodeS,depth);
 		this.depth = depth;
 		this.parentNode = monteCarloNodeS;
 		this.rand = rand;
@@ -37,11 +36,10 @@ public class MonteCarloNodeG {
 			return currentChild;
 		} else {
 			State nextState = parentNode.getNodeState().clone();
-			// TODO MODIFY THE STATE TO THE NEXT NODE
 			ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 			ArrayList<Agent> agents = new ArrayList<Agent>();
 			// compute a random object which the seed is the previous state
-			// so the prey will do the same action for the 4 child of the same
+			// so the generated prey will do the same action for the 4 child of the same
 			// parent
 			directionOfAgents.add(Direction
 					.values()[(int) (new RandomSeededDouble(nextState.toLongApproximation()).generateDouble() * 4)]);
@@ -58,22 +56,6 @@ public class MonteCarloNodeG {
 			MonteCarloNodeS newChild = new MonteCarloNodeS(nextState, this, depth + 1, rand);
 			childsNode[indexChild] = newChild;
 			return newChild;
-		}
-	}
-
-	public void propagateWin() {
-		nodeTry++;
-		pointsEarned++;
-		if (parentNode != null) {
-			parentNode.propagateWin();
-		}
-	}
-
-	public void propagateLose() {
-		nodeTry++;
-		pointsEarned--;
-		if (parentNode != null) {
-			parentNode.propagateLose();
 		}
 	}
 
@@ -109,14 +91,5 @@ public class MonteCarloNodeG {
 		// "+bestDirection.get(index));
 		return bestDirection.get(index);
 		*/
-	}
-
-	@Override
-	public String toString() {
-		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
-	}
-
-	public int getDepth() {
-		return depth;
 	}
 }

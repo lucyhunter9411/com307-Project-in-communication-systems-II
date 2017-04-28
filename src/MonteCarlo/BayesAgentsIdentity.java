@@ -136,7 +136,7 @@ public class BayesAgentsIdentity {
 				probabilityModelOfAction[i][1] /= pTot;
 			}
 
-			//printTable();
+			printTable();
 			previousState = currentState;
 		}
 	}

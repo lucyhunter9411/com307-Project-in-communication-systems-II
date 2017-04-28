@@ -37,6 +37,7 @@ public class MonteCarloPredator extends Agent {
 	@Override
 	public void initiate(State initialState) {
 		bayesAgentsIdentity = new BayesAgentsIdentity(initialState);
+		//save fake agents into the base state, we will use them to generate the future State in the MonteCarlo Tree
 		initiateAgentsList(initialState);
 	}
 	
@@ -46,7 +47,6 @@ public class MonteCarloPredator extends Agent {
 			agentsList[i] = (new GreedyPredator(initialState, i + 3, rand.generateLong()));
 		}
 		for (int i = 0; i < 3; i++) {
-			//TODO need to initiate to the REAL baseState, not the baseState of each iteration
 			agentsList[i+3] = (new TeammateAwarePredator(initialState, i + 3, rand.generateLong()));
 		}
 	}

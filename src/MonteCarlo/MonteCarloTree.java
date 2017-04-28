@@ -4,8 +4,6 @@ import Main.RandomSeededDouble;
 import Main.State;
 
 import Actor.Agent;
-import Actor.GreedyPredator;
-import Actor.TeammateAwarePredator;
 import Enum.Direction;
 
 public class MonteCarloTree {

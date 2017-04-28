@@ -5,20 +5,17 @@ import Enum.Direction;
 import Main.RandomSeededDouble;
 import Main.State;
 
-public class MonteCarloNodeS {
+public class MonteCarloNodeS extends MonteCarloNode{
 
 	private State nodeState;
-	private MonteCarloNodeG parentNode;
 	private final int depth;
 	private MonteCarloNodeG[] childsNode = new MonteCarloNodeG[4];
-	double pointsEarned = 0;
-	int nodeTry = 0;
 	private RandomSeededDouble rand;
 
 	public MonteCarloNodeS(State state, MonteCarloNodeG monteCarloNodeG, int depth, RandomSeededDouble rand) {
+		super(monteCarloNodeG,depth);
 		nodeState = state.clone();
 		this.depth = depth;
-		this.parentNode = monteCarloNodeG;
 		this.rand = rand;
 	}
 
@@ -78,22 +75,6 @@ public class MonteCarloNodeS {
 		return depth >= depthThreshold;
 	}
 
-	public void propagateWin() {
-		nodeTry++;
-		pointsEarned++;
-		if (parentNode != null) {
-			parentNode.propagateWin();
-		}
-	}
-
-	public void propagateLose() {
-		nodeTry++;
-		pointsEarned--;
-		if (parentNode != null) {
-			parentNode.propagateLose();
-		}
-	}
-
 	public Direction computeBestUTC() {
 		double maxUTCValue = -Double.MAX_VALUE;
 		ArrayList<Direction> bestDirection = new ArrayList<>();
@@ -124,11 +105,6 @@ public class MonteCarloNodeS {
 		return bestDirection.get(index);
 	}
 
-	@Override
-	public String toString() {
-		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
-	}
-
 	// return the direction with the best expected value
 	public Direction computeBestDirection() {
 		double maxExpValue = -Double.MAX_VALUE;
@@ -152,9 +128,5 @@ public class MonteCarloNodeS {
 		// return the direction with the bigger Expected Value
 		int index = (int) (rand.generateDouble() * bestDirection.size());
 		return bestDirection.get(index);
-	}
-
-	public int getDepth() {
-		return depth;
 	}
 }
