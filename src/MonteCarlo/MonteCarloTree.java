@@ -54,11 +54,11 @@ public class MonteCarloTree {
 			}
 			// the currentNode has won
 			if (currentStateNode.hasWon()) {
-				currentStateNode.propagateWin();
+				currentStateNode.setWinner();
 			}
 			// the currentNode has lost
 			else {
-				currentStateNode.propagateLose();
+				currentStateNode.setLoser();
 			}
 		}
 	}

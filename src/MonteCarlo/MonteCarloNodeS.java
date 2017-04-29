@@ -5,21 +5,21 @@ import Enum.Direction;
 import Main.RandomSeededDouble;
 import Main.State;
 
-public class MonteCarloNodeS extends MonteCarloNode{
+public class MonteCarloNodeS extends MonteCarloNode {
 
 	private State nodeState;
 	private final int depth;
-	private MonteCarloNodeG[] childsNode = new MonteCarloNodeG[4];
+	private MonteCarloNode[] childsNode = new MonteCarloNode[4];
 	private RandomSeededDouble rand;
 
 	public MonteCarloNodeS(State state, MonteCarloNodeG monteCarloNodeG, int depth, RandomSeededDouble rand) {
-		super(monteCarloNodeG,depth);
+		super(monteCarloNodeG, depth);
 		nodeState = state.clone();
 		this.depth = depth;
 		this.rand = rand;
 	}
 
-	public MonteCarloNodeG getChild(Direction d) {
+	public MonteCarloNode getChild(Direction d) {
 		switch (d) {
 		case LEFT:
 			return childsNode[0];
@@ -36,12 +36,12 @@ public class MonteCarloNodeS extends MonteCarloNode{
 	}
 
 	public MonteCarloNodeG computeChild(Direction d) {
-		MonteCarloNodeG currentChild = getChild(d);
+		MonteCarloNodeG currentChild = (MonteCarloNodeG) getChild(d);
 		// already computed
 		if (currentChild != null) {
 			return currentChild;
 		} else {
-			MonteCarloNodeG newChild = new MonteCarloNodeG(this, d , depth , rand);
+			MonteCarloNodeG newChild = new MonteCarloNodeG(this, d, depth, rand);
 			switch (d) {
 			case LEFT:
 				childsNode[0] = newChild;
@@ -101,7 +101,8 @@ public class MonteCarloNodeS extends MonteCarloNode{
 		}
 		// return the direction with the bigger UTC
 		int index = (int) (rand.generateDouble() * bestDirection.size());
-		//System.out.println(bestDirection + " " + maxUTCValue+" "+bestDirection.get(index));
+		// System.out.println(bestDirection + " " + maxUTCValue+"
+		// "+bestDirection.get(index));
 		return bestDirection.get(index);
 	}
 

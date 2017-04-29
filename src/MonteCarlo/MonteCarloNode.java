@@ -45,10 +45,10 @@ public abstract class MonteCarloNode {
 		}
 	}
 	/*
-	 * public void propagateWin() {
+	 public void propagateWin() {
 		nodeTry++;
 		double stack=0;
-		for(MonteCarloNodeS child: childsNode){
+		for(MonteCarloNode child: childsNode){
 			if(child!=null){
 				stack+=child.nodeTry*child.pointsEarned;
 			}
@@ -72,8 +72,7 @@ public abstract class MonteCarloNode {
 			parentNode.propagateLose();
 		}
 	}
-	 */
-	
+	*/
 	@Override
 	public String toString() {
 		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
