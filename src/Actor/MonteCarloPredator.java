@@ -23,10 +23,10 @@ public class MonteCarloPredator extends Agent {
 	@Override
 	public Direction iterate(State state) {
 		bayesAgentsIdentity.newStateInformation(state.clone(), previousComputedDirection);
-		// TODO See what bayesAgentsIdentity tells us
 		// state.printMapHelper();
 		// System.out.println();
-		monteCarloTree = new MonteCarloTree(state.clone(), MAX_ITERATION, TREE_THRESHOLD, rand, agentsList);
+		monteCarloTree = new MonteCarloTree(state.clone(), TREE_THRESHOLD, rand, agentsList);
+		monteCarloTree.computeMCT(MAX_ITERATION, bayesAgentsIdentity);
 		// System.out.println(monteCarloTree);
 		previousComputedDirection = monteCarloTree.getBaseNode().computeBestDirection();
 		// ((MonteCarloNodeG)

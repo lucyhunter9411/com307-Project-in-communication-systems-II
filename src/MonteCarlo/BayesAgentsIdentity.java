@@ -143,8 +143,12 @@ public class BayesAgentsIdentity {
 
 	// agentIndex is between 3 and nbrPredator+1
 	public double modelProbablityOfAgent(AgentType predatorType, int agentIndex) {
-		// TODO
-		return probabilityModelOfAction[agentIndex - 3][0];
+		//default AgentType.Greedy
+		int predatorIndex = 0;
+		if(predatorType == AgentType.TeammateAware){
+			predatorIndex = 1;
+		}
+		return probabilityModelOfAction[agentIndex - 3][predatorIndex];
 	}
 
 	// helper

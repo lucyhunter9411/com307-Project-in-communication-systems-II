@@ -4,6 +4,7 @@ import Main.RandomSeededDouble;
 import Main.State;
 
 import Actor.Agent;
+import Enum.AgentType;
 import Enum.Direction;
 
 public class MonteCarloTree {
@@ -13,34 +14,32 @@ public class MonteCarloTree {
 	private Agent[] agentsList;
 	private RandomSeededDouble rand;
 
-	public MonteCarloTree(State initialState, int nbrIteration, int threshold, RandomSeededDouble rand,
+	public MonteCarloTree(State initialState, int threshold, RandomSeededDouble rand,
 			Agent[] agentsList) {
 		this.rand = rand;
 		depthThreshold = threshold;
 		baseState = initialState.clone();
 		baseNode = new MonteCarloNodeS(baseState, null, 0, rand);
 		this.agentsList = agentsList;
-		computeMCT(nbrIteration);
 	}
 
 	public MonteCarloNodeS getBaseNode() {
 		return baseNode;
 	}
 
-	public void computeMCT(int nbrIteration) {
+	public void computeMCT(int nbrIteration, BayesAgentsIdentity bayesAgentsIdentity) {
 		MonteCarloNodeS currentStateNode;
 		for (int i = 0; i < nbrIteration; i++) {
 			currentStateNode = baseNode;
 			// the currentNode didn't win or lose
 			while (!((currentStateNode.hasWon() && currentStateNode.getDepth() != 0)
 					|| currentStateNode.hasLost(depthThreshold))) {
-				// TODO
 				// the next node is the UTC selected child of currentNode
 				Direction nextDirection = currentStateNode.computeBestUTC();
 				// generate the next NodeG
 				MonteCarloNodeG childNodeG = currentStateNode.computeChild(nextDirection);
 				// choose the model in function of our probability table
-				int childIndex = childNodeG.computeBestUTC();
+				int childIndex = computeNextModelIndex(bayesAgentsIdentity);
 				// set the good agents in function of our model and put them on
 				// the right position
 				Agent[] generatedAgents = setModelAgents(childIndex);
@@ -61,6 +60,17 @@ public class MonteCarloTree {
 				currentStateNode.setLoser();
 			}
 		}
+	}
+
+	private int computeNextModelIndex(BayesAgentsIdentity bayesAgentsIdentity) {
+		int result = 0;
+		for(int i =0; i<3; i++){
+			int agentIndex = i+3;
+			if(bayesAgentsIdentity.modelProbablityOfAgent(AgentType.TeammateAware, agentIndex)>rand.generateDouble()){
+				result+=Math.pow(2, i);
+			}
+		}
+		return result;
 	}
 
 	private Agent[] setModelAgents(int childIndex) {
