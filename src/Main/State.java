@@ -2,6 +2,8 @@ package Main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 
 import Actor.Agent;
 import Enum.Direction;
@@ -140,14 +142,14 @@ public class State {
 		for (int i = 0; i < directionOfAgents.size(); i++) {
 			didAgentMoved[i] = false;
 		}
-//		long seed = System.nanoTime();
-//		Collections.shuffle(directionOfAgents, new Random(seed));
-//		Collections.shuffle(agents, new Random(seed));
+		// shuffle the order to prevent the prey to always have the priority
+		Collections.shuffle(directionOfAgents, new Random(this.toLongApproximation()));
+		Collections.shuffle(agents, new Random(this.toLongApproximation()));
 		boolean changmentAppliedThisLoop = true;
 		while (changmentAppliedThisLoop) {
 			changmentAppliedThisLoop = false;
-			//for (int i = directionOfAgents.size()-1; i >=0; i--) {
-			for(int i = 0; i<directionOfAgents.size();i++){
+			// for (int i = directionOfAgents.size()-1; i >=0; i--) {
+			for (int i = 0; i < directionOfAgents.size(); i++) {
 				if (!didAgentMoved[i]) {
 					boolean hasAgentMoved = modifyStateForAgent(agents.get(i), directionOfAgents.get(i));
 					if (hasAgentMoved) {
@@ -284,9 +286,9 @@ public class State {
 	}
 
 	public boolean hasSameAgentPosition(State s, int agentIndex) {
-		int tableIndex = agentIndex-1;
+		int tableIndex = agentIndex - 1;
 		int[][] otherStateList = s.getAgentsCoordinateList();
-		return agentsCoordinate[tableIndex][0]==otherStateList[tableIndex][0]
-				&& agentsCoordinate[tableIndex][1]==otherStateList[tableIndex][1];
+		return agentsCoordinate[tableIndex][0] == otherStateList[tableIndex][0]
+				&& agentsCoordinate[tableIndex][1] == otherStateList[tableIndex][1];
 	}
 }
