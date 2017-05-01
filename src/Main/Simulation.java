@@ -3,9 +3,9 @@ package Main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 
 import Actor.*;
+import Enum.AgentType;
 import Enum.Direction;
 
 public class Simulation {
@@ -18,14 +18,10 @@ public class Simulation {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, int nbrTeamPredator, long seed, int nbrGreedyPredator,
-			boolean useOneMtcPredator) {
+	public Simulation(int mapSizeHeight, int mapSizeWidth, long seed, AgentType[] agentsList) {
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
-		this.nbrPredator = nbrTeamPredator+nbrGreedyPredator;
-		if(useOneMtcPredator){
-			nbrPredator++;
-		}
+		this.nbrPredator = agentsList.length;
 		initialState = new State(mapSizeHeight, mapSizeWidth, nbrPredator);
 		rand = new RandomSeededDouble(seed);
 
@@ -36,11 +32,6 @@ public class Simulation {
 		if (mapSizeHeight * mapSizeWidth < finishedNumberAgents) {
 			throw new AssertionError("more agents than cells");
 		}
-		if (nbrGreedyPredator > nbrPredator) {
-			throw new InputMismatchException("more greedy predator than the total of predator");
-		}
-		int greedyPredatorToAdd = nbrGreedyPredator;
-		boolean addedMTCPredator = false;
 		while (i <= finishedNumberAgents) {
 			pos = (int) (mapHeight * mapWidth * rand.generateDouble());
 			posX = pos % mapWidth;
@@ -49,14 +40,14 @@ public class Simulation {
 				if (i == 1) {
 					agents.add(new Prey(posX, posY, i, rand.generateLong()));
 				} else {
-					if (!addedMTCPredator && useOneMtcPredator) {
+					if (agentsList[i-2]==AgentType.MonteCarlo) {
 						agents.add(new MonteCarloPredator(posX, posY, i, rand.generateLong()));
-						addedMTCPredator = true;
-					} else if (greedyPredatorToAdd > 0) {
+					} else if (agentsList[i-2]==AgentType.Greedy) {
 						agents.add(new GreedyPredator(posX, posY, i, rand.generateLong()));
-						greedyPredatorToAdd--;
-					} else {
+					} else if(agentsList[i-2]==AgentType.TeammateAware){
 						agents.add(new TeammateAwarePredator(posX, posY, i, rand.generateLong()));
+					} else{
+						throw new AssertionError("predatorList is in a wrong State");
 					}
 				}
 				i++;

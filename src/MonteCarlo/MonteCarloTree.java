@@ -14,8 +14,7 @@ public class MonteCarloTree {
 	private Agent[] agentsList;
 	private RandomSeededDouble rand;
 
-	public MonteCarloTree(State initialState, int threshold, RandomSeededDouble rand,
-			Agent[] agentsList) {
+	public MonteCarloTree(State initialState, int threshold, RandomSeededDouble rand, Agent[] agentsList) {
 		this.rand = rand;
 		depthThreshold = threshold;
 		baseState = initialState.clone();
@@ -64,10 +63,11 @@ public class MonteCarloTree {
 
 	private int computeNextModelIndex(BayesAgentsIdentity bayesAgentsIdentity) {
 		int result = 0;
-		for(int i =0; i<3; i++){
-			int agentIndex = i+3;
-			if(bayesAgentsIdentity.modelProbablityOfAgent(AgentType.TeammateAware, agentIndex)>rand.generateDouble()){
-				result+=Math.pow(2, i);
+		for (int i = 0; i < 3; i++) {
+			int agentIndex = i + 3;
+			if (bayesAgentsIdentity.modelProbablityOfAgent(AgentType.TeammateAware, agentIndex) > rand
+					.generateDouble()) {
+				result += Math.pow(2, i);
 			}
 		}
 		return result;

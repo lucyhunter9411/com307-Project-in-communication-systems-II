@@ -3,8 +3,7 @@ package Actor;
 import Enum.AgentType;
 import Enum.Direction;
 import Main.State;
-import MonteCarlo.BayesAgentsIdentity;
-import MonteCarlo.MonteCarloTree;
+import MonteCarlo.*;
 
 public class MonteCarloPredator extends Agent {
 	MonteCarloTree monteCarloTree;
@@ -23,16 +22,29 @@ public class MonteCarloPredator extends Agent {
 	@Override
 	public Direction iterate(State state) {
 		bayesAgentsIdentity.newStateInformation(state.clone(), previousComputedDirection);
+		// update the MCT if some nodes are still useful, or create a new tree
+		monteCarloTree = updateMCT(state);
 		// state.printMapHelper();
 		// System.out.println();
-		monteCarloTree = new MonteCarloTree(state.clone(), TREE_THRESHOLD, rand, agentsList);
 		monteCarloTree.computeMCT(MAX_ITERATION, bayesAgentsIdentity);
 		// System.out.println(monteCarloTree);
 		previousComputedDirection = monteCarloTree.getBaseNode().computeBestDirection();
 		// ((MonteCarloNodeG)
-		// monteCarloTree.getBaseNode().getChild(previousComputedDirection)).getChild(7).getNodeState().printMapHelper();
+		// monteCarloTree.getBaseNode().getChild(previousComputedDirection)).getChild(0).getNodeState().printMapHelper();
 		// System.out.println();
 		return previousComputedDirection;
+	}
+
+	private MonteCarloTree updateMCT(State state) {
+		// TODO
+		if (previousComputedDirection != null) {
+			// The head of the tree is the new node and we change the depth of
+			// the nodes
+			MonteCarloNodeG aNode = (MonteCarloNodeG) monteCarloTree.getBaseNode().getChild(previousComputedDirection);
+			return new MonteCarloTree(state.clone(), TREE_THRESHOLD, rand, agentsList);
+		} else {
+			return new MonteCarloTree(state.clone(), TREE_THRESHOLD, rand, agentsList);
+		}
 	}
 
 	@Override
