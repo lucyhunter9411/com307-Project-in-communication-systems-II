@@ -28,5 +28,5 @@
   * 4 Teammate aware: 5.483 average step
   * 1 MTC and 3 Greedy :11.017 average step (1000 simulations in around 10 minutes)
   * 1 MTC and 3 Teammate aware : 9.505 average step (1000 simulation in around 8 minutes)
-  * 1 MTC 1 Greedy and 2 Teammate aware : xxx average step (1000 simulation in around x minutes)
-  * 1 MTC 2 Greedy and 1 Teammate aware : xxx average step (1000 simulation in around x minutes)
+  * 1 MTC 1 Greedy and 2 Teammate aware : 19.854 average step (1000 simulation in around 15 minutes)
+  * 1 MTC 2 Greedy and 1 Teammate aware : 16.538 average step (1000 simulation in around 15 minutes)
