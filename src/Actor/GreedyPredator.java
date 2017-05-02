@@ -5,7 +5,7 @@ import Enum.AgentType;
 import Main.State;
 
 public class GreedyPredator extends Agent {
- 
+
 	public GreedyPredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
 		type = AgentType.Greedy;

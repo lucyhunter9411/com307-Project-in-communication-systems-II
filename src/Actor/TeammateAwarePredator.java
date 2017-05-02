@@ -14,14 +14,15 @@ import Main.State;
 public class TeammateAwarePredator extends Agent {
 
 	public Direction attributedPreyNeighbor;
-	public final AgentType predatorType = AgentType.TeammateAware; 
+	public final AgentType predatorType = AgentType.TeammateAware;
 
 	public TeammateAwarePredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
 		type = AgentType.TeammateAware;
 	}
 
-	//this contructor need to use the initial state to compute the attributedPreyneighbor
+	// this contructor need to use the initial state to compute the
+	// attributedPreyneighbor
 	public TeammateAwarePredator(State s, int agentIndex, long randSeed) {
 		super(s.getAgentsCoordinateList()[agentIndex - 1][0], s.getAgentsCoordinateList()[agentIndex - 1][1],
 				agentIndex, randSeed);

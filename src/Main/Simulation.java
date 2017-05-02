@@ -40,13 +40,13 @@ public class Simulation {
 				if (i == 1) {
 					agents.add(new Prey(posX, posY, i, rand.generateLong()));
 				} else {
-					if (agentsList[i-2]==AgentType.MonteCarlo) {
+					if (agentsList[i - 2] == AgentType.MonteCarlo) {
 						agents.add(new MonteCarloPredator(posX, posY, i, rand.generateLong()));
-					} else if (agentsList[i-2]==AgentType.Greedy) {
+					} else if (agentsList[i - 2] == AgentType.Greedy) {
 						agents.add(new GreedyPredator(posX, posY, i, rand.generateLong()));
-					} else if(agentsList[i-2]==AgentType.TeammateAware){
+					} else if (agentsList[i - 2] == AgentType.TeammateAware) {
 						agents.add(new TeammateAwarePredator(posX, posY, i, rand.generateLong()));
-					} else{
+					} else {
 						throw new AssertionError("predatorList is in a wrong State");
 					}
 				}
@@ -83,9 +83,9 @@ public class Simulation {
 		}
 		//
 		g.setColor(Color.BLACK);
-		for (Agent a: agents) {
-			int j=a.getAgentIndex();
-			g.drawString(" " + j + " "+ a.getType(), a.getPosX() * squareSize + squareSize / 4,
+		for (Agent a : agents) {
+			int j = a.getAgentIndex();
+			g.drawString(" " + j + " " + a.getType(), a.getPosX() * squareSize + squareSize / 4,
 					a.getPosY() * squareSize + squareSize / 2);
 		}
 	}

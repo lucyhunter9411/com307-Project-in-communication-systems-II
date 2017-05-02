@@ -11,6 +11,7 @@ public abstract class Agent {
 	protected int agentIndex;
 	protected RandomSeededDouble rand;
 	protected AgentType type = AgentType.Unknow;
+
 	public Agent(int x, int y, int agentIndex, long randSeed) {
 		posX = x;
 		posY = y;
@@ -34,8 +35,8 @@ public abstract class Agent {
 		posX = newPosX;
 		posY = newPosY;
 	}
-	
-	public AgentType getType(){
+
+	public AgentType getType() {
 		return type;
 	}
 
@@ -48,6 +49,6 @@ public abstract class Agent {
 
 	@Override
 	public String toString() {
-		return "[Agent: "+type+" index:" + agentIndex + " posX: " + posX + " posY: " + posY + "] ";
+		return "[Agent: " + type + " index:" + agentIndex + " posX: " + posX + " posY: " + posY + "] ";
 	}
 }

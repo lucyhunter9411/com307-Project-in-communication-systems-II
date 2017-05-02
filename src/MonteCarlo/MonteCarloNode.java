@@ -7,28 +7,27 @@ public abstract class MonteCarloNode {
 	protected double pointsEarned = 0;
 	protected int nodeTry = 0;
 
-	public MonteCarloNode( MonteCarloNode parentNode, int depth) {
+	public MonteCarloNode(MonteCarloNode parentNode, int depth) {
 		this.depth = depth;
 		this.parentNode = parentNode;
 	}
-	
 
-	public void setWinner(){
+	public void setWinner() {
 		nodeTry++;
 		pointsEarned++;
 		if (parentNode != null) {
 			parentNode.propagateWin();
 		}
 	}
-	
-	public void setLoser(){
+
+	public void setLoser() {
 		nodeTry++;
 		pointsEarned--;
 		if (parentNode != null) {
 			parentNode.propagateLose();
 		}
 	}
-	
+
 	public void propagateWin() {
 		nodeTry++;
 		pointsEarned++;
@@ -44,35 +43,18 @@ public abstract class MonteCarloNode {
 			parentNode.propagateLose();
 		}
 	}
-	/*
-	 public void propagateWin() {
-		nodeTry++;
-		double stack=0;
-		for(MonteCarloNode child: childsNode){
-			if(child!=null){
-				stack+=child.nodeTry*child.pointsEarned;
-			}
-		}
-		pointsEarned = stack/nodeTry;
-		if (parentNode != null) {
-			parentNode.propagateWin();
-		}
-	}
 
-	public void propagateLose() {
-		nodeTry++;
-		double stack=0;
-		for(MonteCarloNodeS child: childsNode){
-			if(child!=null){
-				stack+=child.nodeTry*child.pointsEarned;
-			}
-		}
-		pointsEarned = stack/nodeTry;
-		if (parentNode != null) {
-			parentNode.propagateLose();
-		}
-	}
-	*/
+	/*
+	 * public void propagateWin() { nodeTry++; double stack=0;
+	 * for(MonteCarloNode child: childsNode){ if(child!=null){
+	 * stack+=child.nodeTry*child.pointsEarned; } } pointsEarned =
+	 * stack/nodeTry; if (parentNode != null) { parentNode.propagateWin(); } }
+	 * 
+	 * public void propagateLose() { nodeTry++; double stack=0;
+	 * for(MonteCarloNodeS child: childsNode){ if(child!=null){
+	 * stack+=child.nodeTry*child.pointsEarned; } } pointsEarned =
+	 * stack/nodeTry; if (parentNode != null) { parentNode.propagateLose(); } }
+	 */
 	@Override
 	public String toString() {
 		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
