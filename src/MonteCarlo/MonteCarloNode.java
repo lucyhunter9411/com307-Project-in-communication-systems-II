@@ -2,16 +2,22 @@ package MonteCarlo;
 
 public abstract class MonteCarloNode {
 
-	private MonteCarloNode parentNode;
-	private final int depth;
+	protected MonteCarloNode parentNode;
 	protected double pointsEarned = 0;
 	protected int nodeTry = 0;
 
-	public MonteCarloNode(MonteCarloNode parentNode, int depth) {
-		this.depth = depth;
+	public MonteCarloNode(MonteCarloNode parentNode) {
 		this.parentNode = parentNode;
 	}
-
+	
+	public double getPointsEarned(){
+		return pointsEarned;
+	}
+	
+	public int getNodeTry(){
+		return nodeTry;
+	}
+	/*
 	public void setWinner() {
 		nodeTry++;
 		pointsEarned++;
@@ -27,7 +33,7 @@ public abstract class MonteCarloNode {
 			parentNode.propagateLose();
 		}
 	}
-
+	*/
 	public void propagateWin() {
 		nodeTry++;
 		pointsEarned++;
@@ -57,10 +63,14 @@ public abstract class MonteCarloNode {
 	 */
 	@Override
 	public String toString() {
-		return "Node[w:" + pointsEarned + " t:" + nodeTry + " depth:" + depth + "]";
-	}
+		if(this instanceof MonteCarloNodeS){
+			return "NodeS[w:" + pointsEarned + " t:" + nodeTry+"]";
 
-	public int getDepth() {
-		return depth;
+		}
+		else if(this instanceof MonteCarloNodeG){
+			return "NodeG[w:" + pointsEarned + " t:" + nodeTry + "]";
+
+		}
+		return "Node[w:" + pointsEarned + " t:" + nodeTry + "]";
 	}
 }

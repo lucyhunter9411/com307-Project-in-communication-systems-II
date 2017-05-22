@@ -44,8 +44,8 @@ public class BayesAgentsIdentity {
 	public void newStateInformation(State newState, Direction previousMTCDirection) {
 		// we don't gain any information on the first iteration so we filter the
 		// case out (in this case previousMTCDirection is null)
-		if (!(newState.toLongApproximation() == baseState.toLongApproximation()
-				&& newState.toLongApproximation() == previousState.toLongApproximation())) {
+		if (!(newState.toLong() == baseState.toLong()
+				&& newState.toLong() == previousState.toLong())) {
 			// previousState.printMapHelper();
 			// System.out.println();
 			// newState.printMapHelper();
@@ -93,7 +93,7 @@ public class BayesAgentsIdentity {
 				// add the dummy agent which replaces the MTC
 				agentTested.add(0, new GreedyPredator(previousState, 2, 0));
 				directionTested.add(0, previousMTCDirection);
-				// TODO add a fake prey
+				//add a fake prey
 				agentTested.add(0, new Prey(previousState, 1, 0));
 				directionTested.add(0, Direction.LEFT);
 				// System.out.println();
@@ -114,8 +114,8 @@ public class BayesAgentsIdentity {
 					}
 				}
 			}
-			// System.out.println(valG[0]+" "+valG[1]+" "+valG[2]);
-			// System.out.println(valT[0]+" "+valT[1]+" "+valT[2]);
+			 System.out.println(valG[0]+" "+valG[1]+" "+valG[2]);
+			 System.out.println(valT[0]+" "+valT[1]+" "+valT[2]);
 
 			// compute the next probability in function of the teammates actions
 			// using Bayesian and the Polynomial
@@ -138,7 +138,7 @@ public class BayesAgentsIdentity {
 				probabilityModelOfAction[i][1] /= pTot;
 			}
 
-			// printTable();
+			printTable();
 			previousState = currentState;
 		}
 	}

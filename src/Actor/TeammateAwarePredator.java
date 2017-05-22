@@ -11,6 +11,7 @@ import Enum.Direction;
 import Enum.AgentType;
 import Main.State;
 
+//extension of an agent, the teammate aware Predator compute the best neighbor for all the others agents (without communication) and try to reach this point with A*
 public class TeammateAwarePredator extends Agent {
 
 	public Direction attributedPreyNeighbor;
@@ -21,8 +22,8 @@ public class TeammateAwarePredator extends Agent {
 		type = AgentType.TeammateAware;
 	}
 
-	// this contructor need to use the initial state to compute the
-	// attributedPreyneighbor
+	// second constructor used for MCT and compute attributedPreyNeighbors
+	// create an agent that match the current state parameter
 	public TeammateAwarePredator(State s, int agentIndex, long randSeed) {
 		super(s.getAgentsCoordinateList()[agentIndex - 1][0], s.getAgentsCoordinateList()[agentIndex - 1][1],
 				agentIndex, randSeed);
@@ -34,29 +35,22 @@ public class TeammateAwarePredator extends Agent {
 	// in the case of a teammate aware predator, we precompute the
 	// destination(prey's neighbor cell) attributed for this predator
 	public void initiate(State initialState) {
-		// TODO the number of predator is 4 atm for this algorithm, but state
-		// can have a bigger number
+		// the number of predator is 4 atm for this algorithm, but the state can
+		// have a bigger number
 		if (initialState.getNbrAgents() - 1 != 4) {
 			throw new IllegalStateException("This agent work only in team of 4 predator");
 		}
 		// Calculate the distance from each predator to each cell neighboring
 		// the prey.
 		ArrayList<ArrayList<Integer>> distancePredatorsNeighbors = computePredatorDistanceOrder(initialState);
-		// System.out.println(distancePredatorsNeighbors);
 		// Order the predators based on worst shortest distance to a cell
 		// neighboring the prey.
 		int[] orderedWorstPredator = computeWorstPredator(distancePredatorsNeighbors, 4);
 
-		/*
-		 * In order, the predators are assigned the unchosen destination that is
-		 * closest to them (without communication), breaking ties by a mutually
-		 * known ordering of the predators.
-		 */
+		// compute the direction attributed for each agents (without
+		// communication)
 		Direction[] directionPerPredator = computeDirectionPerPredator(distancePredatorsNeighbors,
 				orderedWorstPredator);
-		// System.out.println(directionPerPredator[0]+"
-		// "+directionPerPredator[1]+" "+directionPerPredator[2]+"
-		// "+directionPerPredator[3]+" ");
 
 		assert (agentIndex > 1 && agentIndex <= 5);
 		attributedPreyNeighbor = directionPerPredator[agentIndex - 2];
@@ -64,10 +58,6 @@ public class TeammateAwarePredator extends Agent {
 
 	@Override
 	public Direction iterate(State state) {
-		/*
-		 * If the predator is already at the destination, try to move onto the
-		 * prey so that if it moves, the predator will follow.
-		 */
 		int preyX = state.getPreyPosX();
 		int preyY = state.getPreyPosY();
 		int width = state.getMapWidth();
@@ -76,6 +66,8 @@ public class TeammateAwarePredator extends Agent {
 		int destinationY = preyY;
 		// compute the destination coordinate
 		// check if the predator is already on the destination
+		// If the predator is already at the destination, try to move onto the
+		// prey so that if it moves, the predator will follow.
 		switch (attributedPreyNeighbor) {
 		case LEFT:
 			destinationX = (preyX - 1 + width) % width;
@@ -278,14 +270,11 @@ public class TeammateAwarePredator extends Agent {
 					}
 				}
 			}
-			// System.out.println("OpenSet: "+openSet);
 		}
 		// return failure
-		// failure happened if the agent is captured by 3 predators and the
+		// failure happened if the agent is circled by 3 predators and the
 		// prey, so the A* fail
 		// instead of an error, just move randomly
-		// throw new IllegalStateException("A* didn't found a path from
-		// "+startNode+" to "+goalNode);
 		double randomDouble = rand.generateDouble();
 		return Direction.values()[(int) (randomDouble * 4)];
 	}
@@ -321,6 +310,7 @@ public class TeammateAwarePredator extends Agent {
 		return null;
 	}
 
+	// return a new node moved in direction d
 	private Node getMovedNode(Node n, Direction d) {
 		int newPosX = n.posX;
 		int newPosY = n.posY;
@@ -358,6 +348,7 @@ public class TeammateAwarePredator extends Agent {
 		return minNode;
 	}
 
+	// private class representing a node for the A* algorithm
 	private class Node {
 		public final int posX;
 		public final int posY;

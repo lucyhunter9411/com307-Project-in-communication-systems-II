@@ -5,9 +5,11 @@ import Enum.Direction;
 import Main.RandomSeededDouble;
 import Main.State;
 
+//abstract representation of a movable agent on the grid
 public abstract class Agent {
 
 	protected int posY, posX;
+	// specific index different of the other agent on the grid
 	protected int agentIndex;
 	protected RandomSeededDouble rand;
 	protected AgentType type = AgentType.Unknow;

@@ -10,17 +10,14 @@ import Main.State;
 
 public class MonteCarloNodeG extends MonteCarloNode {
 
-	private MonteCarloNodeS parentNode;
-	private final int depth;
 	private final int modelPossibility = 8;
 	private MonteCarloNode[] childsNode = new MonteCarloNode[modelPossibility];
 	private RandomSeededDouble rand;
 	private Direction parentDirection;
 
-	public MonteCarloNodeG(MonteCarloNodeS monteCarloNodeS, Direction parentDirection, int depth,
+	public MonteCarloNodeG(MonteCarloNodeS monteCarloNodeS, Direction parentDirection,
 			RandomSeededDouble rand) {
-		super(monteCarloNodeS, depth);
-		this.depth = depth;
+		super(monteCarloNodeS);
 		this.parentNode = monteCarloNodeS;
 		this.rand = rand;
 		this.parentDirection = parentDirection;
@@ -36,7 +33,7 @@ public class MonteCarloNodeG extends MonteCarloNode {
 		if (currentChild != null) {
 			return currentChild;
 		} else {
-			State nextState = parentNode.getNodeState().clone();
+			State nextState = ((MonteCarloNodeS) parentNode).getNodeState().clone();
 			ArrayList<Direction> directionOfAgents = new ArrayList<Direction>();
 			ArrayList<Agent> agents = new ArrayList<Agent>();
 			// compute a random object which the seed is the previous state
@@ -44,7 +41,7 @@ public class MonteCarloNodeG extends MonteCarloNode {
 			// the same
 			// parent
 			directionOfAgents.add(Direction
-					.values()[(int) (new RandomSeededDouble(nextState.toLongApproximation()).generateDouble() * 4)]);
+					.values()[(int) (new RandomSeededDouble(nextState.toLong()).generateDouble() * 4)]);
 			agents.add(new Prey(nextState, 1, 0));
 			// value for the MTC agent
 			directionOfAgents.add(parentDirection);
@@ -55,28 +52,13 @@ public class MonteCarloNodeG extends MonteCarloNode {
 				agents.add(a);
 			}
 			nextState.modifyState(directionOfAgents, agents);
-			MonteCarloNodeS newChild = new MonteCarloNodeS(nextState, this, depth + 1, rand);
+			MonteCarloNodeS newChild = new MonteCarloNodeS(nextState, this, rand);
 			childsNode[indexChild] = newChild;
 			return newChild;
 		}
 	}
 
-	public int computeBestUTC() {
-		return 7;
-		/*
-		 * double maxUTCValue = -Double.MAX_VALUE; ArrayList<Integer>
-		 * bestDirection = new ArrayList<>(); for (int
-		 * i=0;i<modelPossibility;i++) { // TODO Whatsupp with null? double t =
-		 * nodeTry; if (t == 0) { t = 1; } double wi = 1; double ni = 1; if
-		 * (getChild(i) != null) { wi = getChild(i).pointsEarned; ni =
-		 * getChild(i).nodeTry; } double UTCValue = wi / ni + Math.sqrt(2 *
-		 * Math.log(t) / ni); if (UTCValue > maxUTCValue) {
-		 * bestDirection.clear(); bestDirection.add(i); maxUTCValue = UTCValue;
-		 * } else if (UTCValue == maxUTCValue) { bestDirection.add(i); } } //
-		 * return the direction with the bigger UTC int index = (int)
-		 * (rand.generateDouble() * bestDirection.size()); //
-		 * System.out.println(bestDirection + " " + maxUTCValue+" //
-		 * "+bestDirection.get(index)); return bestDirection.get(index);
-		 */
+	public MonteCarloNode[] getChilds() {
+		return (MonteCarloNode[]) childsNode;
 	}
 }

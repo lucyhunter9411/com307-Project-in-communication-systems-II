@@ -18,7 +18,7 @@ public class MonteCarloTree {
 		this.rand = rand;
 		depthThreshold = threshold;
 		baseState = initialState.clone();
-		baseNode = new MonteCarloNodeS(baseState, null, 0, rand);
+		baseNode = new MonteCarloNodeS(baseState, null, rand);
 		this.agentsList = agentsList;
 	}
 
@@ -30,9 +30,10 @@ public class MonteCarloTree {
 		MonteCarloNodeS currentStateNode;
 		for (int i = 0; i < nbrIteration; i++) {
 			currentStateNode = baseNode;
+			int currentDepth = 0;
 			// the currentNode didn't win or lose
-			while (!((currentStateNode.hasWon() && currentStateNode.getDepth() != 0)
-					|| currentStateNode.hasLost(depthThreshold))) {
+			while (!((currentStateNode.hasWon() && currentDepth != 0)
+					|| currentDepth>=depthThreshold)) {
 				// the next node is the UTC selected child of currentNode
 				Direction nextDirection = currentStateNode.computeBestUTC();
 				// generate the next NodeG
@@ -49,14 +50,15 @@ public class MonteCarloTree {
 				// "+generatedAgents[2]+""+((TeammateAwarePredator)generatedAgents[2]).attributedPreyNeighbor);}
 				// generate the next stateNode
 				currentStateNode = childNodeG.computeChild(generatedAgents, childIndex);
+				currentDepth++;
 			}
 			// the currentNode has won
 			if (currentStateNode.hasWon()) {
-				currentStateNode.setWinner();
+				currentStateNode.propagateWin();
 			}
 			// the currentNode has lost
 			else {
-				currentStateNode.setLoser();
+				currentStateNode.propagateLose();
 			}
 		}
 	}
@@ -112,5 +114,10 @@ public class MonteCarloTree {
 			}
 		}
 		return result;
+	}
+
+	public void chooseNextParent(Direction previousComputedDirection, int indexToChild) {
+		baseNode = (MonteCarloNodeS)((MonteCarloNodeG) baseNode.getChild(previousComputedDirection)).getChild(indexToChild);
+		baseNode.setAsNewParent();
 	}
 }

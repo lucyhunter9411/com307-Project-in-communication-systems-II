@@ -38,7 +38,7 @@ public class State {
 			this.cellsMap[i] = Arrays.copyOf(cellsMap[i], cellsMap[i].length);
 		}
 		this.agentsCoordinate = new int[nbrAgents][2];
-		for (int i = 0; i < cellsMap.length; i++) {
+		for (int i = 0; i < agentsCoordinate.length; i++) {
 			this.agentsCoordinate[i] = Arrays.copyOf(agentsCoordinate[i], agentsCoordinate[i].length);
 		}
 
@@ -143,8 +143,8 @@ public class State {
 			didAgentMoved[i] = false;
 		}
 		// shuffle the order to prevent the prey to always have the priority
-		Collections.shuffle(directionOfAgents, new Random(this.toLongApproximation()));
-		Collections.shuffle(agents, new Random(this.toLongApproximation()));
+		Collections.shuffle(directionOfAgents, new Random(this.toLong()));
+		Collections.shuffle(agents, new Random(this.toLong()));
 		boolean changmentAppliedThisLoop = true;
 		while (changmentAppliedThisLoop) {
 			changmentAppliedThisLoop = false;
@@ -285,6 +285,16 @@ public class State {
 		return result;
 	}
 
+	public long toLong(){
+		long result = 0;
+		int base = mapHeight*mapWidth;
+		for(int i = 0; i< nbrAgents;i++){
+			int value = agentsCoordinate[i][0]+agentsCoordinate[i][1]*mapWidth;
+			result += base*i*value;
+		}
+		return result;
+	}
+	
 	public boolean hasSameAgentPosition(State s, int agentIndex) {
 		int tableIndex = agentIndex - 1;
 		int[][] otherStateList = s.getAgentsCoordinateList();

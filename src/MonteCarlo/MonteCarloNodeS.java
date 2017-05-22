@@ -8,14 +8,12 @@ import Main.State;
 public class MonteCarloNodeS extends MonteCarloNode {
 
 	private State nodeState;
-	private final int depth;
 	private MonteCarloNode[] childsNode = new MonteCarloNode[4];
 	private RandomSeededDouble rand;
 
-	public MonteCarloNodeS(State state, MonteCarloNodeG monteCarloNodeG, int depth, RandomSeededDouble rand) {
-		super(monteCarloNodeG, depth);
+	public MonteCarloNodeS(State state, MonteCarloNodeG monteCarloNodeG, RandomSeededDouble rand) {
+		super(monteCarloNodeG);
 		nodeState = state.clone();
-		this.depth = depth;
 		this.rand = rand;
 	}
 
@@ -41,7 +39,7 @@ public class MonteCarloNodeS extends MonteCarloNode {
 		if (currentChild != null) {
 			return currentChild;
 		} else {
-			MonteCarloNodeG newChild = new MonteCarloNodeG(this, d, depth, rand);
+			MonteCarloNodeG newChild = new MonteCarloNodeG(this, d , rand);
 			switch (d) {
 			case LEFT:
 				childsNode[0] = newChild;
@@ -69,10 +67,6 @@ public class MonteCarloNodeS extends MonteCarloNode {
 
 	public boolean hasWon() {
 		return nodeState.isPreyCaptured();
-	}
-
-	public boolean hasLost(int depthThreshold) {
-		return depth >= depthThreshold;
 	}
 
 	public Direction computeBestUTC() {
@@ -129,5 +123,9 @@ public class MonteCarloNodeS extends MonteCarloNode {
 		// return the direction with the bigger Expected Value
 		int index = (int) (rand.generateDouble() * bestDirection.size());
 		return bestDirection.get(index);
+	}
+
+	public void setAsNewParent() {
+		parentNode = null;
 	}
 }

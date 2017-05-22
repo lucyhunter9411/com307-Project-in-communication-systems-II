@@ -27,8 +27,7 @@ import javax.swing.JButton;
 public class Main extends JPanel {
 	public final static int WINDOW_HEIGHT = 1500;
 	public final static int WINDOW_WIDTH = 1000;
-	public final static int MAP_HEIGHT = 5;
-	public final static int MAP_WIDTH = 5;
+	public final static int DEFAULT_MAP_HEIGHT = 10;
 	public final static long DEFAULT_SEED = 1234567890;
 	private final static AgentType[] predatorsList = { AgentType.Greedy, AgentType.Greedy, AgentType.Greedy,
 			AgentType.Greedy };
@@ -38,7 +37,7 @@ public class Main extends JPanel {
 	static Label resultLabel = new Label("##################################################################");
 
 	public static void main(String[] args) {
-		s = new Simulation(MAP_HEIGHT, MAP_WIDTH, DEFAULT_SEED, predatorsList);
+		s = new Simulation(DEFAULT_MAP_HEIGHT, DEFAULT_MAP_HEIGHT, DEFAULT_SEED, predatorsList);
 		JFrame f = new JFrame();
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setPreferredSize(new Dimension(1000, 1300));
@@ -47,9 +46,10 @@ public class Main extends JPanel {
 		mapPanel.setPreferredSize(new Dimension(1000, 1000));
 		controlPanel.setPreferredSize(new Dimension(1000, 300));
 
-		// initialize the buttons in the control panel
+		
 		JTextField textFieldSeed = new JTextField(DEFAULT_SEED + "", 12);
-
+		JTextField textFieldMapHeight = new JTextField(DEFAULT_MAP_HEIGHT + "", 12);
+		
 		// button to iterate once on the simulation
 		JButton buttonIterate = new JButton();
 		buttonIterate.setVisible(true);
@@ -72,7 +72,9 @@ public class Main extends JPanel {
 		buttonRestart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				s = new Simulation(MAP_HEIGHT, MAP_WIDTH, Long.parseLong(textFieldSeed.getText()), predatorsList);
+				int mapHeight = Integer.parseInt(textFieldMapHeight.getText());
+				
+				s = new Simulation(mapHeight, mapHeight, Long.parseLong(textFieldSeed.getText()), predatorsList);
 				mapPanel.repaint();
 			}
 		});
@@ -92,9 +94,10 @@ public class Main extends JPanel {
 						int minIteration = Integer.MAX_VALUE;
 						int maxIteration = 0;
 						int currentIteration;
+						int mapHeight = Integer.parseInt(textFieldMapHeight.getText());
 						for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
 							long generatedSeed = generator.nextLong();
-							s = new Simulation(MAP_HEIGHT, MAP_WIDTH, generatedSeed, predatorsList);
+							s = new Simulation(mapHeight, mapHeight, generatedSeed, predatorsList);
 							// the simulation is iterated until the prey is
 							// captured
 							while (!s.iterate()) {
@@ -211,6 +214,8 @@ public class Main extends JPanel {
 		JPanel firstCell = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		firstCell.add(new Label("Seed:"));
 		firstCell.add(textFieldSeed);
+		firstCell.add(new Label("Map H:"));
+		firstCell.add(textFieldMapHeight);
 		controlPanel.add(firstCell);
 
 		JPanel secondCell = new JPanel();

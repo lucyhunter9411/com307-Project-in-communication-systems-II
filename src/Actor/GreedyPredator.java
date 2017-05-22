@@ -4,6 +4,7 @@ import Enum.Direction;
 import Enum.AgentType;
 import Main.State;
 
+//extension of an agent, the greedy predator just want to get closer to the prey, not considering the others agents
 public class GreedyPredator extends Agent {
 
 	public GreedyPredator(int x, int y, int agentIndex, long randSeed) {
@@ -11,6 +12,8 @@ public class GreedyPredator extends Agent {
 		type = AgentType.Greedy;
 	}
 
+	// second constructor used for MCT
+	// create an agent that match the current state parameter
 	public GreedyPredator(State s, int agentIndex, long randSeed) {
 		super(s.getAgentsCoordinateList()[agentIndex - 1][0], s.getAgentsCoordinateList()[agentIndex - 1][1],
 				agentIndex, randSeed);
@@ -73,9 +76,8 @@ public class GreedyPredator extends Agent {
 			if (dy > height / 2) {
 				dy = dy - height;
 			}
-			// System.out.println("dx "+dx+" dy "+dy+" posX "+posX+" posY "+posY
-			// );
-			// Let d = dimmax. If md is not blocked, take it.
+			// choose the best path in function of dy and dx, if the direction
+			// is not blocked
 			if (Math.abs(dy) > Math.abs(dx)) {
 				if (dy < 0) {
 					if (!state.isDirectionBlocked(posX, posY, Direction.TOP)) {
@@ -97,7 +99,6 @@ public class GreedyPredator extends Agent {
 					}
 				}
 			}
-			// Let d = dimmin. If md is not blocked, take it.
 			if (Math.abs(dy) < Math.abs(dx)) {
 				if (dy < 0) {
 					if (!state.isDirectionBlocked(posX, posY, Direction.TOP)) {

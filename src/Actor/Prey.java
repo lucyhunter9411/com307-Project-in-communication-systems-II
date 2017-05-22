@@ -4,6 +4,7 @@ import Enum.AgentType;
 import Enum.Direction;
 import Main.State;
 
+//extension of an agent, the prey just move randomly and is the agent which should be captured in this problem
 public class Prey extends Agent {
 	public Prey(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
@@ -25,5 +26,6 @@ public class Prey extends Agent {
 
 	@Override
 	public void initiate(State initialState) {
+		// nothing to initialize for a greedyPredator
 	}
 }
