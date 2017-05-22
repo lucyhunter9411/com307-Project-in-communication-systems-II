@@ -14,7 +14,7 @@ public class MonteCarloPredator extends Agent {
 	private BayesAgentsIdentity bayesAgentsIdentity;
 	private Direction previousComputedDirection;
 	private Agent[] agentsList;
-	private boolean debug = true;
+	private boolean debug = false;
 
 	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed) {
 		super(x, y, agentIndex, randSeed);
@@ -37,7 +37,6 @@ public class MonteCarloPredator extends Agent {
 			// monteCarloTree.getBaseNode().getChild(previousComputedDirection)).getChild(0).getNodeState().printMapHelper();
 			state.printMapHelper();
 			System.out.println();
-			bayesAgentsIdentity.printTable();
 		}
 		return previousComputedDirection;
 	}

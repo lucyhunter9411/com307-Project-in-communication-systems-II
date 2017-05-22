@@ -372,11 +372,5 @@ public class TeammateAwarePredator extends Agent {
 			Node n = (Node) obj;
 			return hashCode() == n.hashCode();
 		}
-
-		@Override
-		public String toString() {
-			return "NODE[posX: " + posX + " posY: " + posY + "]";
-		}
-
 	}
 }

@@ -137,7 +137,9 @@ public class State {
 		return nbrAgents;
 	}
 
-	public void modifyState(ArrayList<Direction> directionOfAgents, ArrayList<Agent> agents) {
+	public void modifyState(ArrayList<Direction> agentsDir, ArrayList<Agent> agentsList) {
+		ArrayList<Direction> directionOfAgents = new ArrayList<Direction>(agentsDir);
+		ArrayList<Agent> agents = new ArrayList<Agent>(agentsList);
 		boolean[] didAgentMoved = new boolean[directionOfAgents.size()];
 		for (int i = 0; i < directionOfAgents.size(); i++) {
 			didAgentMoved[i] = false;

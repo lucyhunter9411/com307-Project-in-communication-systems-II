@@ -8,6 +8,7 @@ import Actor.Prey;
 import Actor.TeammateAwarePredator;
 import Enum.AgentType;
 import Enum.Direction;
+import Main.RandomSeededDouble;
 import Main.State;
 
 public class BayesAgentsIdentity {
@@ -44,8 +45,7 @@ public class BayesAgentsIdentity {
 	public void newStateInformation(State newState, Direction previousMTCDirection) {
 		// we don't gain any information on the first iteration so we filter the
 		// case out (in this case previousMTCDirection is null)
-		if (!(newState.toLong() == baseState.toLong()
-				&& newState.toLong() == previousState.toLong())) {
+		if (!(newState.toLong() == baseState.toLong() && newState.toLong() == previousState.toLong())) {
 			// previousState.printMapHelper();
 			// System.out.println();
 			// newState.printMapHelper();
@@ -61,6 +61,7 @@ public class BayesAgentsIdentity {
 			int tot = 8;
 			int[] valG = { 0, 0, 0 };
 			int[] valT = { 0, 0, 0 };
+			Direction directionPrey = findFittestDirectionPrey(newState);
 			for (int i = 0; i < agentTypePossibility; i++) {
 				// update the agentsGreddy and agentsTeam to the last state
 				for (int k = 0; k < nbrPredator - 1; k++) {
@@ -93,14 +94,13 @@ public class BayesAgentsIdentity {
 				// add the dummy agent which replaces the MTC
 				agentTested.add(0, new GreedyPredator(previousState, 2, 0));
 				directionTested.add(0, previousMTCDirection);
-				//add a fake prey
+				// add a fake prey
 				agentTested.add(0, new Prey(previousState, 1, 0));
-				directionTested.add(0, Direction.LEFT);
+				directionTested.add(1, directionPrey);
 				// System.out.println();
 				// System.out.println(agentTested);
 				// System.out.println(directionTested);
 				copiedState.modifyState(directionTested, agentTested);
-				// copiedState.printMapHelper();
 				// the result with those agents return the same result as the
 				// newState
 
@@ -114,8 +114,8 @@ public class BayesAgentsIdentity {
 					}
 				}
 			}
-			 System.out.println(valG[0]+" "+valG[1]+" "+valG[2]);
-			 System.out.println(valT[0]+" "+valT[1]+" "+valT[2]);
+			// System.out.println(valG[0]+" "+valG[1]+" "+valG[2]);
+			// System.out.println(valT[0]+" "+valT[1]+" "+valT[2]);
 
 			// compute the next probability in function of the teammates actions
 			// using Bayesian and the Polynomial
@@ -138,9 +138,47 @@ public class BayesAgentsIdentity {
 				probabilityModelOfAction[i][1] /= pTot;
 			}
 
-			printTable();
+			// printTable();
 			previousState = currentState;
 		}
+	}
+
+	private Direction findFittestDirectionPrey(State newState) {
+		int previousPreyPosX = previousState.getPreyPosX();
+		int previousPreyPosY = previousState.getPreyPosY();
+		int currentPreyPosX = newState.getPreyPosX();
+		int currentPreyPosY = newState.getPreyPosY();
+		int mapHeight = previousState.getMapHeight();
+		int mapWidth = previousState.getMapWidth();
+		// the prey moved horizontally
+		if (previousPreyPosX != currentPreyPosX) {
+			int moveValue = (previousPreyPosX - currentPreyPosX + mapWidth) % mapWidth;
+			if (moveValue == 1) {
+				return Direction.LEFT;
+			} else {
+				return Direction.RIGHT;
+			}
+		}
+		// the prey moved vertically
+		else if (previousPreyPosY != currentPreyPosY) {
+			int moveValue = (previousPreyPosY - currentPreyPosY + mapHeight) % mapHeight;
+			if (moveValue == 1) {
+				return Direction.TOP;
+			} else {
+				return Direction.BOTTOM;
+			}
+		}
+		// the prey got blocked
+		else {
+			for (Direction d : Direction.values()) {
+				if (newState.isDirectionBlocked(currentPreyPosX, currentPreyPosY, d)) {
+					return d;
+				}
+			}
+		}
+		// unreachable since the prey got blocked and there is at least 1
+		// direction blocked (our simulation model guarantees it)
+		return null;
 	}
 
 	// agentIndex is between 3 and nbrPredator+1
