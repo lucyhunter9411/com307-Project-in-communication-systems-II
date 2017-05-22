@@ -35,7 +35,7 @@
 
  #10x10 Grid
   
-  * 4 greedy: 50.741 average step
-  * 4 Teammate aware: 9.919 average step
-  * 1 MTC 3 greedy: 38.638 average step
-  * 1 MTC 3 Teammate aware: 19.255 average step
+  * 4 greedy: 52.616 average step
+  * 4 Teammate aware: 10.225 average step
+  * 1 MTC 3 greedy: 33.993 average step
+  * 1 MTC 3 Teammate aware: 14.891 average step
