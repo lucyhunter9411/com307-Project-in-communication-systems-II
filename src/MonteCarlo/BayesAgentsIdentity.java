@@ -176,9 +176,8 @@ public class BayesAgentsIdentity {
 				}
 			}
 		}
-		// unreachable since the prey got blocked and there is at least 1
-		// direction blocked (our simulation model guarantees it)
-		return null;
+		// return a default direction otherwise
+		return Direction.LEFT;
 	}
 
 	// agentIndex is between 3 and nbrPredator+1
