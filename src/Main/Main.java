@@ -90,6 +90,7 @@ public class Main extends JPanel {
 				Random generator = new Random(initialSeed);
 				Thread backgroundThread = new Thread() {
 					public void run() {
+						final long endTime, startTime = System.nanoTime();
 						long accumulator = 0;
 						int minIteration = Integer.MAX_VALUE;
 						int maxIteration = 0;
@@ -123,6 +124,8 @@ public class Main extends JPanel {
 						resultLabel
 								.setText("Finished the " + NBR_SIMULATION_STACK + " simulations; average is " + average
 										+ " steps." + "\n" + "Minimum: " + minIteration + " Maximum: " + maxIteration);
+						endTime = System.nanoTime();
+						System.out.println("Code took "+(endTime-startTime)*Math.pow(10, -9)+" seconds");
 						mapPanel.repaint();
 					}
 				};

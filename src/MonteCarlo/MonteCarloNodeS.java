@@ -8,11 +8,12 @@ import Main.State;
 public class MonteCarloNodeS extends MonteCarloNode {
 
 	private State nodeState;
-	private MonteCarloNode[] childsNode = new MonteCarloNode[4];
+	
 	private RandomSeededDouble rand;
 
 	public MonteCarloNodeS(State state, MonteCarloNodeG monteCarloNodeG, RandomSeededDouble rand) {
 		super(monteCarloNodeG);
+		childsNode = new MonteCarloNode[4];
 		nodeState = state.clone();
 		this.rand = rand;
 	}
@@ -73,7 +74,6 @@ public class MonteCarloNodeS extends MonteCarloNode {
 		double maxUTCValue = -Double.MAX_VALUE;
 		ArrayList<Direction> bestDirection = new ArrayList<>();
 		for (Direction d : Direction.values()) {
-			// TODO Whatsupp with null?
 			double t = nodeTry;
 			if (t == 0) {
 				t = 1;

@@ -8,7 +8,6 @@ import Actor.Prey;
 import Actor.TeammateAwarePredator;
 import Enum.AgentType;
 import Enum.Direction;
-import Main.RandomSeededDouble;
 import Main.State;
 
 public class BayesAgentsIdentity {

@@ -11,13 +11,13 @@ import Main.State;
 public class MonteCarloNodeG extends MonteCarloNode {
 
 	private final int modelPossibility = 8;
-	private MonteCarloNode[] childsNode = new MonteCarloNode[modelPossibility];
 	private RandomSeededDouble rand;
 	private Direction parentDirection;
 
 	public MonteCarloNodeG(MonteCarloNodeS monteCarloNodeS, Direction parentDirection,
 			RandomSeededDouble rand) {
 		super(monteCarloNodeS);
+		childsNode = new MonteCarloNode[modelPossibility];
 		this.parentNode = monteCarloNodeS;
 		this.rand = rand;
 		this.parentDirection = parentDirection;
@@ -52,10 +52,29 @@ public class MonteCarloNodeG extends MonteCarloNode {
 				agents.add(a);
 			}
 			nextState.modifyState(directionOfAgents, agents);
-			MonteCarloNodeS newChild = new MonteCarloNodeS(nextState, this, rand);
+			MonteCarloNodeS equivalentChild = findEquivalentChild(nextState.toLong());
+			MonteCarloNodeS newChild;
+			if(equivalentChild!=null){
+				newChild = equivalentChild;
+			}
+			else{
+				newChild = new MonteCarloNodeS(nextState, this, rand);
+			}
 			childsNode[indexChild] = newChild;
 			return newChild;
 		}
+	}
+
+	private MonteCarloNodeS findEquivalentChild(long stateHash) {
+		for(MonteCarloNode node: childsNode){
+			if(node!=null){
+				if(((MonteCarloNodeS)node).getNodeState().toLong()==stateHash){
+					return (MonteCarloNodeS)node;
+				}
+			}
+		}
+		return null;
+		
 	}
 
 	public MonteCarloNode[] getChilds() {

@@ -5,19 +5,20 @@ public abstract class MonteCarloNode {
 	protected MonteCarloNode parentNode;
 	protected double pointsEarned = 0;
 	protected int nodeTry = 0;
+	protected MonteCarloNode[] childsNode;
 
 	public MonteCarloNode(MonteCarloNode parentNode) {
 		this.parentNode = parentNode;
 	}
-	
-	public double getPointsEarned(){
+
+	public double getPointsEarned() {
 		return pointsEarned;
 	}
-	
-	public int getNodeTry(){
+
+	public int getNodeTry() {
 		return nodeTry;
 	}
-	/*
+
 	public void setWinner() {
 		nodeTry++;
 		pointsEarned++;
@@ -33,41 +34,50 @@ public abstract class MonteCarloNode {
 			parentNode.propagateLose();
 		}
 	}
-	*/
+	/*
+	 * public void propagateWin() { nodeTry++; pointsEarned++; if (parentNode !=
+	 * null) { parentNode.propagateWin(); } }
+	 * 
+	 * public void propagateLose() { nodeTry++; pointsEarned--; if (parentNode
+	 * != null) { parentNode.propagateLose(); } }
+	 */
+
 	public void propagateWin() {
-		nodeTry++;
-		pointsEarned++;
+		nodeTry=0;
+		double stack = 0;
+		for (MonteCarloNode child : childsNode) {
+			if (child != null) {
+				stack += child.nodeTry * child.pointsEarned;
+				nodeTry += child.nodeTry;
+			}
+		}
+		pointsEarned = stack / nodeTry;
 		if (parentNode != null) {
 			parentNode.propagateWin();
 		}
 	}
 
 	public void propagateLose() {
-		nodeTry++;
-		pointsEarned--;
+		nodeTry=0;
+		double stack = 0;
+		for (MonteCarloNode child : childsNode) {
+			if (child != null) {
+				stack += child.nodeTry * child.pointsEarned;
+				nodeTry += child.nodeTry;
+			}
+		}
+		pointsEarned = stack / nodeTry;
 		if (parentNode != null) {
 			parentNode.propagateLose();
 		}
 	}
 
-	/*
-	 * public void propagateWin() { nodeTry++; double stack=0;
-	 * for(MonteCarloNode child: childsNode){ if(child!=null){
-	 * stack+=child.nodeTry*child.pointsEarned; } } pointsEarned =
-	 * stack/nodeTry; if (parentNode != null) { parentNode.propagateWin(); } }
-	 * 
-	 * public void propagateLose() { nodeTry++; double stack=0;
-	 * for(MonteCarloNodeS child: childsNode){ if(child!=null){
-	 * stack+=child.nodeTry*child.pointsEarned; } } pointsEarned =
-	 * stack/nodeTry; if (parentNode != null) { parentNode.propagateLose(); } }
-	 */
 	@Override
 	public String toString() {
-		if(this instanceof MonteCarloNodeS){
-			return "NodeS[w:" + pointsEarned + " t:" + nodeTry+"]";
+		if (this instanceof MonteCarloNodeS) {
+			return "NodeS[w:" + pointsEarned + " t:" + nodeTry + "]";
 
-		}
-		else if(this instanceof MonteCarloNodeG){
+		} else if (this instanceof MonteCarloNodeG) {
 			return "NodeG[w:" + pointsEarned + " t:" + nodeTry + "]";
 
 		}

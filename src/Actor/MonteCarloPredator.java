@@ -9,7 +9,7 @@ import MonteCarlo.*;
 public class MonteCarloPredator extends Agent {
 	MonteCarloTree monteCarloTree;
 	boolean allOtherAgentsGreedy = true;
-	private final int MAX_ITERATION = 2000;
+	private final int MAX_ITERATION = 3000;
 	private final int TREE_THRESHOLD = 10;
 	private BayesAgentsIdentity bayesAgentsIdentity;
 	private Direction previousComputedDirection;

@@ -54,11 +54,11 @@ public class MonteCarloTree {
 			}
 			// the currentNode has won
 			if (currentStateNode.hasWon()) {
-				currentStateNode.propagateWin();
+				currentStateNode.setWinner();
 			}
 			// the currentNode has lost
 			else {
-				currentStateNode.propagateLose();
+				currentStateNode.setLoser();
 			}
 		}
 	}
@@ -81,18 +81,21 @@ public class MonteCarloTree {
 			modelAgentsList[0] = agentsList[0];
 		} else {
 			modelAgentsList[0] = agentsList[3];
+			childIndex--;
 		}
 		childIndex /= 2;
 		if (childIndex % 2 == 0) {
 			modelAgentsList[1] = agentsList[1];
 		} else {
 			modelAgentsList[1] = agentsList[4];
+			childIndex--;
 		}
 		childIndex /= 2;
 		if (childIndex % 2 == 0) {
 			modelAgentsList[2] = agentsList[2];
 		} else {
 			modelAgentsList[2] = agentsList[5];
+			childIndex--;
 		}
 		return modelAgentsList;
 	}
