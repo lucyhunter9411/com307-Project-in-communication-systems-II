@@ -8,8 +8,8 @@ import MonteCarlo.*;
 //extension of an agent, the Monte Carlo predator create a tree of possible future outcome and compute the best probabilistic move in function of the tree
 public class MonteCarloPredator extends Agent {
 	MonteCarloTree monteCarloTree;
-	private final int MAX_ITERATION = 500;
-	private final int TREE_THRESHOLD = 20;
+	private final int MAX_ITERATION;
+	private final int TREE_THRESHOLD;
 	private BayesAgentsIdentity bayesAgentsIdentity;
 	private Direction previousComputedDirection;
 	private Agent[] agentsList;
@@ -17,8 +17,8 @@ public class MonteCarloPredator extends Agent {
 	private boolean debug = false;
 	private int modelIndex;
 
-	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed, boolean defaultBayesianMode,
-			int modelIndex) {
+	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed, boolean defaultBayesianMode, int modelIndex,
+			int maxIteration, int depthThreshold) {
 		super(x, y, agentIndex, randSeed);
 		type = AgentType.MonteCarlo;
 		// if false it means we know perfectly the models of the others agent,
@@ -27,6 +27,9 @@ public class MonteCarloPredator extends Agent {
 		// from states
 		this.defaultBayesianMode = defaultBayesianMode;
 		this.modelIndex = modelIndex;
+		MAX_ITERATION = maxIteration;
+		TREE_THRESHOLD = depthThreshold;
+
 	}
 
 	@Override

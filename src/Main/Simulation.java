@@ -19,7 +19,7 @@ public class Simulation {
 	private RandomSeededDouble rand;
 
 	public Simulation(int mapSizeHeight, int mapSizeWidth, long seed, AgentType[] agentsList,
-			boolean defaultBayesianMode) {
+			boolean defaultBayesianMode, int maxIterationMCT, int depthThresholdMCT) {
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
 		this.nbrPredator = agentsList.length;
@@ -49,7 +49,7 @@ public class Simulation {
 							modelIndex = computeModelIndex(agentsList);
 						}
 						agents.add(new MonteCarloPredator(posX, posY, i, rand.generateLong(), defaultBayesianMode,
-								modelIndex));
+								modelIndex, maxIterationMCT, depthThresholdMCT));
 					} else if (agentsList[i - 2] == AgentType.Greedy) {
 						agents.add(new GreedyPredator(posX, posY, i, rand.generateLong()));
 					} else if (agentsList[i - 2] == AgentType.TeammateAware) {

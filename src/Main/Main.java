@@ -31,6 +31,8 @@ public class Main extends JPanel {
 	public final static int DEFAULT_MAP_HEIGHT = 5;
 	public final static long DEFAULT_SEED = 1234567890;
 	public final static boolean DEFAULT_BAYESIAN_MODE = false;
+	public final static int DEFAULT_MCT_MAX_ITERATION = 500;
+	public final static int DEFAULT_MCT_DEPTH_THRESHOLD = 20;
 	private final static AgentType[] predatorsList = { AgentType.Greedy, AgentType.Greedy, AgentType.Greedy,
 			AgentType.Greedy };
 	public final static int NBR_SIMULATION_STACK = 1000;
@@ -39,7 +41,8 @@ public class Main extends JPanel {
 	static Label resultLabel = new Label("##################################################################");
 
 	public static void main(String[] args) {
-		s = new Simulation(DEFAULT_MAP_HEIGHT, DEFAULT_MAP_HEIGHT, DEFAULT_SEED, predatorsList, DEFAULT_BAYESIAN_MODE);
+		s = new Simulation(DEFAULT_MAP_HEIGHT, DEFAULT_MAP_HEIGHT, DEFAULT_SEED, predatorsList, DEFAULT_BAYESIAN_MODE,
+				DEFAULT_MCT_MAX_ITERATION, DEFAULT_MCT_DEPTH_THRESHOLD);
 		JFrame f = new JFrame();
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setPreferredSize(new Dimension(1000, 1300));
@@ -50,6 +53,9 @@ public class Main extends JPanel {
 
 		JTextField textFieldSeed = new JTextField(DEFAULT_SEED + "", 12);
 		JTextField textFieldMapHeight = new JTextField(DEFAULT_MAP_HEIGHT + "", 12);
+		JTextField textFieldIterationMCT = new JTextField(DEFAULT_MCT_MAX_ITERATION + "", 12);
+		JTextField textFieldDepthMCT = new JTextField(DEFAULT_MCT_DEPTH_THRESHOLD + "", 12);
+
 		JCheckBox bayesianModeCheckBox = new JCheckBox("Bayesian Mode (we don't know the other agents' model)");
 		bayesianModeCheckBox.setSelected(true);
 		// button to iterate once on the simulation
@@ -77,7 +83,8 @@ public class Main extends JPanel {
 				int mapHeight = Integer.parseInt(textFieldMapHeight.getText());
 
 				s = new Simulation(mapHeight, mapHeight, Long.parseLong(textFieldSeed.getText()), predatorsList,
-						bayesianModeCheckBox.isSelected());
+						bayesianModeCheckBox.isSelected(), (int) Long.parseLong(textFieldIterationMCT.getText()),
+						(int) Long.parseLong(textFieldDepthMCT.getText()));
 				mapPanel.repaint();
 			}
 		});
@@ -102,7 +109,9 @@ public class Main extends JPanel {
 						for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
 							long generatedSeed = generator.nextLong();
 							s = new Simulation(mapHeight, mapHeight, generatedSeed, predatorsList,
-									bayesianModeCheckBox.isSelected());
+									bayesianModeCheckBox.isSelected(),
+									(int) Long.parseLong(textFieldIterationMCT.getText()),
+									(int) Long.parseLong(textFieldDepthMCT.getText()));
 							// the simulation is iterated until the prey is
 							// captured
 							while (!s.iterate()) {
@@ -125,11 +134,10 @@ public class Main extends JPanel {
 							}
 						}
 						double average = (double) (accumulator) / NBR_SIMULATION_STACK;
-						resultLabel
-								.setText("Finished the " + NBR_SIMULATION_STACK + " simulations; average is " + average
-										+ " steps." + "\n" + "Minimum: " + minIteration + " Maximum: " + maxIteration);
 						endTime = System.nanoTime();
-						System.out.println("Code took " + (endTime - startTime) * Math.pow(10, -9) + " seconds");
+						resultLabel.setText("Finished the " + NBR_SIMULATION_STACK + " simulations; average is "
+								+ average + " steps" + " in "
+								+ String.format("%.2f", (endTime - startTime) * Math.pow(10, -9)) + " seconds");
 						mapPanel.repaint();
 					}
 				};
@@ -223,7 +231,14 @@ public class Main extends JPanel {
 		firstCell.add(textFieldSeed);
 		firstCell.add(new Label("Map H:"));
 		firstCell.add(textFieldMapHeight);
-
+		firstCell.add(new Label("MCT max iterations:"));
+		firstCell.add(textFieldIterationMCT);
+		firstCell.add(new Label("          "));
+		firstCell.add(new Label("          "));
+		firstCell.add(new Label("          "));
+		firstCell.add(new Label("MCT depth threshold:"));
+		firstCell.add(textFieldDepthMCT);
+		firstCell.add(bayesianModeCheckBox);
 		controlPanel.add(firstCell);
 
 		JPanel secondCell = new JPanel();
@@ -256,7 +271,6 @@ public class Main extends JPanel {
 		JPanel forthCell = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		forthCell.add(buttonIterate);
 		forthCell.add(buttonRestart);
-		forthCell.add(bayesianModeCheckBox);
 		controlPanel.add(forthCell);
 
 		// add all the panel in the main JFrame
