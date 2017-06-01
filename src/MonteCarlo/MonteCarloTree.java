@@ -28,16 +28,16 @@ public class MonteCarloTree {
 
 	public void computeMCT(int nbrIteration, BayesAgentsIdentity bayesAgentsIdentity, boolean defaultBayesianMode,
 			int modelIndex) {
-		MonteCarloNodeS currentStateNode;
+		MonteCarloNodeS currentStateNode = baseNode;
+		int selection = 0;
+		if (currentStateNode.hasNoChild()) {
+			selection = 1;
+		}
 		for (int i = 0; i < nbrIteration; i++) {
 			currentStateNode = baseNode;
 			int currentDepth = 0;
 			// the currentNode didn't win or lose
 			while (!((currentStateNode.hasWon() && currentDepth != 0) || currentDepth >= depthThreshold)) {
-				// the next node is the UTC selected child of currentNode
-				Direction nextDirection = currentStateNode.computeBestUTC();
-				// generate the next NodeG
-				MonteCarloNodeG childNodeG = currentStateNode.computeChild(nextDirection);
 				// choose the model in function of our probability table
 				int childIndex;
 				if (defaultBayesianMode) {
@@ -48,11 +48,31 @@ public class MonteCarloTree {
 				// set the good agents in function of our model and put them on
 				// the right position
 				Agent[] generatedAgents = setModelAgents(childIndex);
-				setAgentsOnPosition(currentStateNode.getNodeState(), generatedAgents);
-				// generate the next stateNode
-				currentStateNode = childNodeG.computeChild(generatedAgents, childIndex);
+				// selection mode
+				if (selection < 2) {
+					// the next node is the UTC selected child of currentNode
+					Direction nextDirection = currentStateNode.computeBestUTC();
+					// generate the next NodeG
+					MonteCarloNodeG childNodeG = currentStateNode.computeChild(nextDirection);
+					setAgentsOnPosition(currentStateNode.getNodeState(), generatedAgents);
+					// generate the next stateNode
+					currentStateNode = childNodeG.computeChild(generatedAgents, childIndex);
+					if (selection == 1) {
+						selection = 2;
+					} else if (selection == 0 && currentStateNode.hasNoChild()) {
+						selection = 1;
+					}
+				}
+				// rollout
+				else {
+					MonteCarloNodeG childNodeG = currentStateNode.computeChildRollout();
+					setAgentsOnPosition(currentStateNode.getNodeState(), generatedAgents);
+					// generate the next stateNode
+					currentStateNode = childNodeG.computeChild(generatedAgents, childIndex);
+				}
 				currentDepth++;
 			}
+			selection = 0;
 			// the currentNode has won
 			if (currentStateNode.hasWon()) {
 				currentStateNode.setWinner();

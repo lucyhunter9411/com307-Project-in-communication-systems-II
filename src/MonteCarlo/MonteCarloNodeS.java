@@ -72,16 +72,17 @@ public class MonteCarloNodeS extends MonteCarloNode {
 
 	public void setLoser() {
 		nodeTry++;
-		int posX1 = nodeState.getPreyPosX();
-		int posY1 = nodeState.getPreyPosY();
-		int posX2 = nodeState.getAgentsCoordinateList()[1][0];
-		int posY2 = nodeState.getAgentsCoordinateList()[1][1];
-		int dist = nodeState.getDistance(posX1, posY1, posX2, posY2);
-		double height = nodeState.getMapHeight();
-		double points = dist / height;
-		pointsEarned -= points;
+		/*
+		 * int posX1 = nodeState.getPreyPosX(); int posY1 =
+		 * nodeState.getPreyPosY(); int posX2 =
+		 * nodeState.getAgentsCoordinateList()[1][0]; int posY2 =
+		 * nodeState.getAgentsCoordinateList()[1][1]; int dist =
+		 * nodeState.getDistance(posX1, posY1, posX2, posY2); double height =
+		 * nodeState.getMapHeight(); double points = dist / height; pointsEarned
+		 * -= points;
+		 */
 		if (parentNode != null) {
-			parentNode.propagateLose(points);
+			parentNode.propagateLose(0);
 		}
 	}
 
@@ -115,18 +116,18 @@ public class MonteCarloNodeS extends MonteCarloNode {
 		return bestDirection.get(index);
 	}
 
-	// return the direction with the best expected value
+	// return the direction with the biggest number of try
 	public Direction computeBestDirection() {
 		double maxExpValue = -Double.MAX_VALUE;
 		ArrayList<Direction> bestDirection = new ArrayList<>();
 		for (Direction d : Direction.values()) {
-			double wi = 1;
+			//double wi = 1;
 			double ni = 1;
 			if (getChild(d) != null) {
-				wi = getChild(d).pointsEarned;
+				//wi = getChild(d).pointsEarned;
 				ni = getChild(d).nodeTry;
 			}
-			double ExpValue = wi / ni;
+			double ExpValue = ni;
 			if (ExpValue > maxExpValue) {
 				bestDirection.clear();
 				bestDirection.add(d);
@@ -135,12 +136,28 @@ public class MonteCarloNodeS extends MonteCarloNode {
 				bestDirection.add(d);
 			}
 		}
-		// return the direction with the bigger Expected Value
+		// return the direction with the bigger number of try
 		int index = (int) (rand.generateDouble() * bestDirection.size());
 		return bestDirection.get(index);
 	}
 
 	public void setAsNewParent() {
 		parentNode = null;
+	}
+
+	public boolean hasNoChild() {
+		boolean result = true;
+		for (MonteCarloNode n : childsNode) {
+			if (n != null) {
+				result = false;
+			}
+		}
+		return result;
+	}
+
+	public MonteCarloNodeG computeChildRollout() {
+		Direction d = Direction.values()[(int) (rand.generateDouble() * 4)];
+		MonteCarloNodeG newChild = new MonteCarloNodeG(this, d, rand);
+		return newChild;
 	}
 }
