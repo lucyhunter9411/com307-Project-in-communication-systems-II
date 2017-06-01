@@ -150,7 +150,6 @@ public class State {
 		boolean changmentAppliedThisLoop = true;
 		while (changmentAppliedThisLoop) {
 			changmentAppliedThisLoop = false;
-			// for (int i = directionOfAgents.size()-1; i >=0; i--) {
 			for (int i = 0; i < directionOfAgents.size(); i++) {
 				if (!didAgentMoved[i]) {
 					boolean hasAgentMoved = modifyStateForAgent(agents.get(i), directionOfAgents.get(i));
@@ -267,36 +266,19 @@ public class State {
 	}
 
 	/*
-	 * return a long representing the state in fuction of its agents coordinate
-	 * one coordinate per decimal of the long if value>9 there could be
-	 * collision but we don't care for its usage, it's currently used just for
-	 * the MTC generated prey to have the same move if its node parent are
-	 * equivalent
+	 * return a long representation the state in fuction of its agents
+	 * coordinate
 	 */
-	public long toLongApproximation() {
+	public long toLong() {
 		long result = 0;
-		int coef = 1;
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < nbrAgents; j++) {
-				int value = agentsCoordinate[j][i];
-				long nextEncodedValue = Math.multiplyExact(value, (long) Math.pow(10, coef));
-				result = Math.addExact(result, nextEncodedValue);
-				coef++;
-			}
+		int base = mapHeight * mapWidth;
+		for (int i = 0; i < nbrAgents; i++) {
+			int value = agentsCoordinate[i][0] + agentsCoordinate[i][1] * mapWidth;
+			result += base * i * value;
 		}
 		return result;
 	}
 
-	public long toLong(){
-		long result = 0;
-		int base = mapHeight*mapWidth;
-		for(int i = 0; i< nbrAgents;i++){
-			int value = agentsCoordinate[i][0]+agentsCoordinate[i][1]*mapWidth;
-			result += base*i*value;
-		}
-		return result;
-	}
-	
 	public boolean hasSameAgentPosition(State s, int agentIndex) {
 		int tableIndex = agentIndex - 1;
 		int[][] otherStateList = s.getAgentsCoordinateList();

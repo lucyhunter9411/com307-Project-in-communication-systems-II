@@ -8,26 +8,36 @@ import MonteCarlo.*;
 //extension of an agent, the Monte Carlo predator create a tree of possible future outcome and compute the best probabilistic move in function of the tree
 public class MonteCarloPredator extends Agent {
 	MonteCarloTree monteCarloTree;
-	boolean allOtherAgentsGreedy = true;
-	private final int MAX_ITERATION = 3000;
-	private final int TREE_THRESHOLD = 10;
+	private final int MAX_ITERATION = 500;
+	private final int TREE_THRESHOLD = 20;
 	private BayesAgentsIdentity bayesAgentsIdentity;
 	private Direction previousComputedDirection;
 	private Agent[] agentsList;
+	private boolean defaultBayesianMode;
 	private boolean debug = false;
+	private int modelIndex;
 
-	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed) {
+	public MonteCarloPredator(int x, int y, int agentIndex, long randSeed, boolean defaultBayesianMode,
+			int modelIndex) {
 		super(x, y, agentIndex, randSeed);
 		type = AgentType.MonteCarlo;
+		// if false it means we know perfectly the models of the others agent,
+		// so we don't need to compute the bayesAgentsIdentity
+		// if true, each model is equiprobable, so we need to get information
+		// from states
+		this.defaultBayesianMode = defaultBayesianMode;
+		this.modelIndex = modelIndex;
 	}
 
 	@Override
 	public Direction iterate(State state) {
 		// update the table of model probability of the agents
-		bayesAgentsIdentity.newStateInformation(state.clone(), previousComputedDirection);
+		if (defaultBayesianMode) {
+			bayesAgentsIdentity.newStateInformation(state.clone(), previousComputedDirection);
+		}
 		// update the MCT if some nodes are still useful, or create a new tree
 		monteCarloTree = updateMCT(state);
-		monteCarloTree.computeMCT(MAX_ITERATION, bayesAgentsIdentity);
+		monteCarloTree.computeMCT(MAX_ITERATION, bayesAgentsIdentity, defaultBayesianMode, modelIndex);
 		if (debug) {
 			System.out.println(monteCarloTree);
 		}

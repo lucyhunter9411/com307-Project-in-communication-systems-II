@@ -18,7 +18,8 @@ public class Simulation {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private RandomSeededDouble rand;
 
-	public Simulation(int mapSizeHeight, int mapSizeWidth, long seed, AgentType[] agentsList) {
+	public Simulation(int mapSizeHeight, int mapSizeWidth, long seed, AgentType[] agentsList,
+			boolean defaultBayesianMode) {
 		this.mapHeight = mapSizeHeight;
 		this.mapWidth = mapSizeWidth;
 		this.nbrPredator = agentsList.length;
@@ -41,7 +42,14 @@ public class Simulation {
 					agents.add(new Prey(posX, posY, i, rand.generateLong()));
 				} else {
 					if (agentsList[i - 2] == AgentType.MonteCarlo) {
-						agents.add(new MonteCarloPredator(posX, posY, i, rand.generateLong()));
+						int modelIndex = -1;
+						// we compute the identifier of our model if we don't
+						// use the bayesian model
+						if (!defaultBayesianMode) {
+							modelIndex = computeModelIndex(agentsList);
+						}
+						agents.add(new MonteCarloPredator(posX, posY, i, rand.generateLong(), defaultBayesianMode,
+								modelIndex));
 					} else if (agentsList[i - 2] == AgentType.Greedy) {
 						agents.add(new GreedyPredator(posX, posY, i, rand.generateLong()));
 					} else if (agentsList[i - 2] == AgentType.TeammateAware) {
@@ -57,6 +65,18 @@ public class Simulation {
 		for (Agent a : agents) {
 			a.initiate(initialState);
 		}
+	}
+
+	// compute the unique integer representing the models of the others agents
+	// in the simulation
+	private int computeModelIndex(AgentType[] agentsList) {
+		int result = 0;
+		for (int i = 0; i < nbrPredator - 1; i++) {
+			if (agentsList[i + 1] == AgentType.TeammateAware) {
+				result += Math.pow(2, i);
+			}
+		}
+		return result;
 	}
 
 	public void draw(Graphics g, int windowHeight) {

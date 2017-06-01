@@ -26,28 +26,29 @@ public class MonteCarloTree {
 		return baseNode;
 	}
 
-	public void computeMCT(int nbrIteration, BayesAgentsIdentity bayesAgentsIdentity) {
+	public void computeMCT(int nbrIteration, BayesAgentsIdentity bayesAgentsIdentity, boolean defaultBayesianMode,
+			int modelIndex) {
 		MonteCarloNodeS currentStateNode;
 		for (int i = 0; i < nbrIteration; i++) {
 			currentStateNode = baseNode;
 			int currentDepth = 0;
 			// the currentNode didn't win or lose
-			while (!((currentStateNode.hasWon() && currentDepth != 0)
-					|| currentDepth>=depthThreshold)) {
+			while (!((currentStateNode.hasWon() && currentDepth != 0) || currentDepth >= depthThreshold)) {
 				// the next node is the UTC selected child of currentNode
 				Direction nextDirection = currentStateNode.computeBestUTC();
 				// generate the next NodeG
 				MonteCarloNodeG childNodeG = currentStateNode.computeChild(nextDirection);
 				// choose the model in function of our probability table
-				int childIndex = computeNextModelIndex(bayesAgentsIdentity);
+				int childIndex;
+				if (defaultBayesianMode) {
+					childIndex = computeNextModelIndex(bayesAgentsIdentity);
+				} else {
+					childIndex = modelIndex;
+				}
 				// set the good agents in function of our model and put them on
 				// the right position
 				Agent[] generatedAgents = setModelAgents(childIndex);
 				setAgentsOnPosition(currentStateNode.getNodeState(), generatedAgents);
-				// if(currentStateNode.getDepth()==0 && i ==0){
-				// System.out.println(generatedAgents[0]+""+((TeammateAwarePredator)generatedAgents[0]).attributedPreyNeighbor+"
-				// "+generatedAgents[1]+""+((TeammateAwarePredator)generatedAgents[1]).attributedPreyNeighbor+"
-				// "+generatedAgents[2]+""+((TeammateAwarePredator)generatedAgents[2]).attributedPreyNeighbor);}
 				// generate the next stateNode
 				currentStateNode = childNodeG.computeChild(generatedAgents, childIndex);
 				currentDepth++;
@@ -120,7 +121,8 @@ public class MonteCarloTree {
 	}
 
 	public void chooseNextParent(Direction previousComputedDirection, int indexToChild) {
-		baseNode = (MonteCarloNodeS)((MonteCarloNodeG) baseNode.getChild(previousComputedDirection)).getChild(indexToChild);
+		baseNode = (MonteCarloNodeS) ((MonteCarloNodeG) baseNode.getChild(previousComputedDirection))
+				.getChild(indexToChild);
 		baseNode.setAsNewParent();
 	}
 }

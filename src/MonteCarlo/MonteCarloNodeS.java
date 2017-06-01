@@ -8,7 +8,7 @@ import Main.State;
 public class MonteCarloNodeS extends MonteCarloNode {
 
 	private State nodeState;
-	
+
 	private RandomSeededDouble rand;
 
 	public MonteCarloNodeS(State state, MonteCarloNodeG monteCarloNodeG, RandomSeededDouble rand) {
@@ -40,7 +40,7 @@ public class MonteCarloNodeS extends MonteCarloNode {
 		if (currentChild != null) {
 			return currentChild;
 		} else {
-			MonteCarloNodeG newChild = new MonteCarloNodeG(this, d , rand);
+			MonteCarloNodeG newChild = new MonteCarloNodeG(this, d, rand);
 			switch (d) {
 			case LEFT:
 				childsNode[0] = newChild;
@@ -68,6 +68,21 @@ public class MonteCarloNodeS extends MonteCarloNode {
 
 	public boolean hasWon() {
 		return nodeState.isPreyCaptured();
+	}
+
+	public void setLoser() {
+		nodeTry++;
+		int posX1 = nodeState.getPreyPosX();
+		int posY1 = nodeState.getPreyPosY();
+		int posX2 = nodeState.getAgentsCoordinateList()[1][0];
+		int posY2 = nodeState.getAgentsCoordinateList()[1][1];
+		int dist = nodeState.getDistance(posX1, posY1, posX2, posY2);
+		double height = nodeState.getMapHeight();
+		double points = dist / height;
+		pointsEarned -= points;
+		if (parentNode != null) {
+			parentNode.propagateLose(points);
+		}
 	}
 
 	public Direction computeBestUTC() {

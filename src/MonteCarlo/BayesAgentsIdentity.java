@@ -56,7 +56,6 @@ public class BayesAgentsIdentity {
 			// find the models of agents which could generate this new state
 			// generate the 2^(nbrPredator-1) States
 			final int agentTypePossibility = (int) Math.pow(2, nbrPredator - 1);
-			// TODO change in function of nbrpredator
 			int tot = 8;
 			int[] valG = { 0, 0, 0 };
 			int[] valT = { 0, 0, 0 };

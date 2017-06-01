@@ -51,10 +51,11 @@ public abstract class Agent {
 
 	@Override
 	public String toString() {
-		if(this.getType()==AgentType.TeammateAware){
-			return "[Agent: " + type + " objectif: "+ ((TeammateAwarePredator)this).attributedPreyNeighbor+" index:" + agentIndex + " posX: " + posX + " posY: " + posY + "] ";
+		if (this.getType() == AgentType.TeammateAware) {
+			return "[Agent: " + type + " objectif: " + ((TeammateAwarePredator) this).attributedPreyNeighbor + " index:"
+					+ agentIndex + " posX: " + posX + " posY: " + posY + "] ";
 
-		}else{
+		} else {
 			return "[Agent: " + type + " index:" + agentIndex + " posX: " + posX + " posY: " + posY + "] ";
 		}
 	}

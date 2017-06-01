@@ -22,13 +22,15 @@ import Enum.AgentType;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 
 @SuppressWarnings("serial")
 public class Main extends JPanel {
 	public final static int WINDOW_HEIGHT = 1500;
 	public final static int WINDOW_WIDTH = 1000;
-	public final static int DEFAULT_MAP_HEIGHT = 10;
+	public final static int DEFAULT_MAP_HEIGHT = 5;
 	public final static long DEFAULT_SEED = 1234567890;
+	public final static boolean DEFAULT_BAYESIAN_MODE = false;
 	private final static AgentType[] predatorsList = { AgentType.Greedy, AgentType.Greedy, AgentType.Greedy,
 			AgentType.Greedy };
 	public final static int NBR_SIMULATION_STACK = 1000;
@@ -37,7 +39,7 @@ public class Main extends JPanel {
 	static Label resultLabel = new Label("##################################################################");
 
 	public static void main(String[] args) {
-		s = new Simulation(DEFAULT_MAP_HEIGHT, DEFAULT_MAP_HEIGHT, DEFAULT_SEED, predatorsList);
+		s = new Simulation(DEFAULT_MAP_HEIGHT, DEFAULT_MAP_HEIGHT, DEFAULT_SEED, predatorsList, DEFAULT_BAYESIAN_MODE);
 		JFrame f = new JFrame();
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setPreferredSize(new Dimension(1000, 1300));
@@ -46,10 +48,10 @@ public class Main extends JPanel {
 		mapPanel.setPreferredSize(new Dimension(1000, 1000));
 		controlPanel.setPreferredSize(new Dimension(1000, 300));
 
-		
 		JTextField textFieldSeed = new JTextField(DEFAULT_SEED + "", 12);
 		JTextField textFieldMapHeight = new JTextField(DEFAULT_MAP_HEIGHT + "", 12);
-		
+		JCheckBox bayesianModeCheckBox = new JCheckBox("Bayesian Mode (we don't know the other agents' model)");
+		bayesianModeCheckBox.setSelected(true);
 		// button to iterate once on the simulation
 		JButton buttonIterate = new JButton();
 		buttonIterate.setVisible(true);
@@ -73,8 +75,9 @@ public class Main extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int mapHeight = Integer.parseInt(textFieldMapHeight.getText());
-				
-				s = new Simulation(mapHeight, mapHeight, Long.parseLong(textFieldSeed.getText()), predatorsList);
+
+				s = new Simulation(mapHeight, mapHeight, Long.parseLong(textFieldSeed.getText()), predatorsList,
+						bayesianModeCheckBox.isSelected());
 				mapPanel.repaint();
 			}
 		});
@@ -98,7 +101,8 @@ public class Main extends JPanel {
 						int mapHeight = Integer.parseInt(textFieldMapHeight.getText());
 						for (int i = 0; i < NBR_SIMULATION_STACK; i++) {
 							long generatedSeed = generator.nextLong();
-							s = new Simulation(mapHeight, mapHeight, generatedSeed, predatorsList);
+							s = new Simulation(mapHeight, mapHeight, generatedSeed, predatorsList,
+									bayesianModeCheckBox.isSelected());
 							// the simulation is iterated until the prey is
 							// captured
 							while (!s.iterate()) {
@@ -125,7 +129,7 @@ public class Main extends JPanel {
 								.setText("Finished the " + NBR_SIMULATION_STACK + " simulations; average is " + average
 										+ " steps." + "\n" + "Minimum: " + minIteration + " Maximum: " + maxIteration);
 						endTime = System.nanoTime();
-						System.out.println("Code took "+(endTime-startTime)*Math.pow(10, -9)+" seconds");
+						System.out.println("Code took " + (endTime - startTime) * Math.pow(10, -9) + " seconds");
 						mapPanel.repaint();
 					}
 				};
@@ -219,6 +223,7 @@ public class Main extends JPanel {
 		firstCell.add(textFieldSeed);
 		firstCell.add(new Label("Map H:"));
 		firstCell.add(textFieldMapHeight);
+
 		controlPanel.add(firstCell);
 
 		JPanel secondCell = new JPanel();
@@ -247,9 +252,11 @@ public class Main extends JPanel {
 		thirdCell.add(progressBar);
 		thirdCell.add(resultLabel);
 		controlPanel.add(thirdCell);
+
 		JPanel forthCell = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		forthCell.add(buttonIterate);
 		forthCell.add(buttonRestart);
+		forthCell.add(bayesianModeCheckBox);
 		controlPanel.add(forthCell);
 
 		// add all the panel in the main JFrame

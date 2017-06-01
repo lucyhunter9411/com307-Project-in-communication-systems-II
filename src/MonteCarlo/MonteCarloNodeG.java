@@ -14,8 +14,7 @@ public class MonteCarloNodeG extends MonteCarloNode {
 	private RandomSeededDouble rand;
 	private Direction parentDirection;
 
-	public MonteCarloNodeG(MonteCarloNodeS monteCarloNodeS, Direction parentDirection,
-			RandomSeededDouble rand) {
+	public MonteCarloNodeG(MonteCarloNodeS monteCarloNodeS, Direction parentDirection, RandomSeededDouble rand) {
 		super(monteCarloNodeS);
 		childsNode = new MonteCarloNode[modelPossibility];
 		this.parentNode = monteCarloNodeS;
@@ -40,8 +39,7 @@ public class MonteCarloNodeG extends MonteCarloNode {
 			// so the generated prey will do the same action for the 4 child of
 			// the same
 			// parent
-			directionOfAgents.add(Direction
-					.values()[(int) (new RandomSeededDouble(nextState.toLong()).generateDouble() * 4)]);
+			directionOfAgents.add(Direction.values()[(int) (rand.generateDouble() * 4)]);
 			agents.add(new Prey(nextState, 1, 0));
 			// value for the MTC agent
 			directionOfAgents.add(parentDirection);
@@ -54,10 +52,9 @@ public class MonteCarloNodeG extends MonteCarloNode {
 			nextState.modifyState(directionOfAgents, agents);
 			MonteCarloNodeS equivalentChild = findEquivalentChild(nextState.toLong());
 			MonteCarloNodeS newChild;
-			if(equivalentChild!=null){
+			if (equivalentChild != null) {
 				newChild = equivalentChild;
-			}
-			else{
+			} else {
 				newChild = new MonteCarloNodeS(nextState, this, rand);
 			}
 			childsNode[indexChild] = newChild;
@@ -66,15 +63,15 @@ public class MonteCarloNodeG extends MonteCarloNode {
 	}
 
 	private MonteCarloNodeS findEquivalentChild(long stateHash) {
-		for(MonteCarloNode node: childsNode){
-			if(node!=null){
-				if(((MonteCarloNodeS)node).getNodeState().toLong()==stateHash){
-					return (MonteCarloNodeS)node;
+		for (MonteCarloNode node : childsNode) {
+			if (node != null) {
+				if (((MonteCarloNodeS) node).getNodeState().toLong() == stateHash) {
+					return (MonteCarloNodeS) node;
 				}
 			}
 		}
 		return null;
-		
+
 	}
 
 	public MonteCarloNode[] getChilds() {
